@@ -1,18 +1,18 @@
 #' Fast KNN Classifier
 #'
-#' Fast k-Nearest Neighbour classifier build upon ANN, a high efficient 
-#' \code{C++} library for nearest neighbour searching.
+#' Fast k-Nearest Neighbor classifier build upon ANN, a high efficient 
+#' \code{C++} library for nearest neighbor searching.
 #'
 #' @param xtr matrix containing the training instances.
 #' @param xte matrix containing the test instances.
 #' @param ytr factor array with the training labels.
-#' @param k number of neighbours considered.
+#' @param k number of neighbors considered.
 #' @param method method used to infer the class membership probabilities of the 
 #' test instances. Choose \code{"dist"} (default) to compute probabilites from 
-#' the inverse of the nearest neighbour distances. This method works as
+#' the inverse of the nearest neighbor distances. This method works as
 #' a shrinkage estimator and provides a better predictive performance in general.
 #' Or you can choose \code{"vote"} to compute probabilities from the frequency 
-#' of the nearest neighbour labels.
+#' of the nearest neighbor labels.
 #'
 #' @return \code{list} with predictions for the test set:
 #' \itemize{
@@ -21,15 +21,17 @@
 #' }
 #'
 #' @export
-#' 
-fastknn <- function(xtr, xte, ytr, k, method = "dist") {
+fastknn <- function(xtr, ytr, xte, k, method = "dist") {
    
-   #### Default number of neighbours
-   if (missing(k)) {
-      k <- min(10, nrow(xtr) - 1)
+   #### Check args
+   if (length(k) > 1) {
+      stop("k must be a single value")
+   }
+   if (k > nrow(xtr)) {
+      stop("The number of nearest neighbors cannot be greater than the number of training instances.")
    }
    
-   #### Find nearest neighbours
+   #### Find nearest neighbors
    knn.search <- RANN::nn2(data = xtr, query = xte, k = k, treetype = 'kd', 
                            searchtype = 'standard')
    
@@ -37,14 +39,14 @@ fastknn <- function(xtr, xte, ytr, k, method = "dist") {
    label.mat <- matrix(ytr[knn.search$nn.idx], ncol = k)
    knn.prob <- switch(
       method,
-      ## P_y = sum(1/d(nn_y))
+      ## P(y_j | x_i) = sum(1/d(nn_i) * (y(nn_i) == y_j)) / sum(1/d(nn_i))
       'dist' = {
          sapply(levels(ytr), function(cl, d, y) {
             rowSums(1/d * (y == cl)) / rowSums(1/d)
          }, d = pmax(knn.search$nn.dists, 1e-15), y = label.mat, 
          simplify=FALSE, USE.NAMES=TRUE)
       },
-      ## P_y = count(nn_y)
+      ## P(y_j | x_i) = sum(y(nn_i) == y_j) / k
       'vote' = {
          sapply(levels(ytr), function(cl, y) {
             rowSums(y == cl) / ncol(y)
