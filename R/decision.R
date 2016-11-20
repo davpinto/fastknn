@@ -25,7 +25,7 @@
 #' @return \code{ggplot2} object.
 #'
 #' @export
-knnDecision <- function(xtr, ytr, xte, yte, k, method = 'dist', dpi = 150) {
+knnDecision <- function(xtr, ytr, xte, yte, k, method = "dist", dpi = 150) {
    
    #### Resample data
    x1 <- seq(
@@ -49,7 +49,7 @@ knnDecision <- function(xtr, ytr, xte, yte, k, method = 'dist', dpi = 150) {
    } else {
       points.df <- data.frame(x1 = xte[,1], x2 = xte[,2], label = yte)
    }
-   y.hat <- fastknn(xtr, ytr, x.new, k, method)
+   y.hat <- fastknn(xtr[, 1:2, drop = FALSE], ytr, x.new, k, method)
    if (nlevels(ytr) > 2) {
       decision.df <- data.frame(x1 = x.new[,1], x2 = x.new[,2], 
                                 y = y.hat$class, 

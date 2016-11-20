@@ -66,3 +66,89 @@ fastknn <- function(xtr, ytr, xte, k, method = "dist") {
       prob = knn.prob
    ))
 }
+
+#' Cross-Validation for fastknn
+#'
+#' Does n-fold cross-validation for \code{fastknn} to find the best k parameter.
+#'
+#' @param x input matrix of dimension \code{nobs x nvars}.
+#' @param y factor array wtih class labels for the \code{x} rows.
+#' @param k sequence of possible k values to be evaluated (default is [3:15]).
+#' @param method the probability estimator as in \code{fastknn}.
+#' @param folds number of folds (default is 5) or an array with fold ids between 
+#' 1 and \code{n} identifying what fold each observation is in. The fold 
+#' assigment given by \code{fastknnCV} does stratified sampling.
+#' @param eval loss to use for cross-validation. Currently five options are available:
+#' \itemize{
+#'  \item \code{eval="overal_error"}: default option. It gives the overall 
+#'  misclassification rate.
+#'  \item \code{eval="mean_error"}: gives the average in-class 
+#'  misclassification rate.
+#'  \item \code{eval="auc"}: gives the average in-class area under the ROC curve.
+#'  \item \code{eval="logloss"}: gives the cross-entropy or logarithmic loss. 
+#' }
+#'
+#' @return \code{list} with cross-validation results:
+#' \itemize{
+#'  \item \code{best_eval}: the best loss measure found in the 
+#'  cross-validation procedure.
+#'  \item \code{best_k}: the best k value found in the cross-validation procedure.
+#'  \item \code{cv_table}: \code{data.frame} with the test performances for each k 
+#'  on each data fold. 
+#' }
+#'  
+#' @export
+fastknnCV <- function(x, y, k = 3:15, method = "dist", folds = 5, 
+                      eval.metric = "overall_acc") {
+   
+   #### Check and create data folds
+   if (length(folds) > 1) {
+      if (length(unique(folds)) < 3) {
+         stop('The smallest number of folds allowable is 3')
+      }
+      if (length(unique(folds)) > nrow(x)) {
+         stop('The highest number of folds allowable is nobs (leave-one-out CV)')
+      }
+   } else {
+      folds <- min(max(3, folds), nrow(x))
+      folds <- createCVFolds(y, n = folds)
+   }
+   
+   #### n-fold cross validation
+   folds <- factor(paste('fold', folds, sep = '_'), 
+                   levels = paste('fold', sort(unique(folds)), sep = '_')) 
+   cv.results <- pbapply::pblapply(k, function(k, x, y, folds) {
+      sapply(levels(folds), function(fold.id) {
+         te.idx <- which(folds == fold.id)
+         y.hat <- fastknn(x[-te.idx,], y[-te.idx], x[te.idx,], k, method)
+         classLoss(actual = y[te.idx], predicted = y.hat$class, 
+                   prob = y.hat$prob, metric = eval.metric)
+      }, simplify = FALSE, USE.NAMES = TRUE)
+   }, x = x, y = y, folds = folds)
+   cv.results <- do.call('rbind.data.frame', cv.results)
+   cv.results$mean <- rowMeans(cv.results)
+   cv.results$k <- k
+   
+   #### Select best performance
+   if (eval.metric == "auc") {
+      best.idx <- which.max(cv.results$mean)
+   } else {
+      best.idx <- which.min(cv.results$mean)
+   }
+   
+   return(list(
+      best_k = k[best.idx],
+      best_eval = cv.results$mean[best.idx],
+      cv_table = cv.results
+   ))
+}
+
+#### Split data into folds using stratified sampling
+createCVFolds <- function(y, n) {
+   folds <- integer(length(y))
+   for (i in levels(y)) {
+      folds[which(y == i)] <- sample(cut(1:sum(y == i), breaks = n, labels = FALSE))
+   }
+   
+   return(folds)
+}
