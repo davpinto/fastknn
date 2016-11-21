@@ -1,5 +1,5 @@
 ---
-title: "Fast k-Nearest Neighbor Classifier (beta)"
+title: "Fast k-Nearest Neighbor Classifier"
 output: 
    pdf_document: 
      highlight: zenburn
@@ -15,7 +15,8 @@ urlcolor: magenta
 ## rmarkdown::render('README.Rmd', 'pdf_document')
 ## rmarkdown::render('README.Rmd', 'github_document')
 
-knitr::opts_chunk$set(echo = TRUE, out.width = "\\textwidth", 
+knitr::opts_chunk$set(echo = TRUE, out.width = "\\textwidth",  
+                      message = FALSE, warning = FALSE,
                       fig.align = "center", fig.height = 4, dpi = 120)
 ```
 
@@ -37,11 +38,68 @@ where $x_i$ is the $i^{\text{th}}$ test instance, $y_j$ is the $j^{\text{th}}$ u
 
 In general, the weighted estimator provides more **calibrated probabilities** when compared with the traditional estimator based on the label proportions of the nearest neighbors, and reduces **logarithmic loss** (log-loss).
 
-### How to use
+### How to install `fastknn`?
+
+The package `fastknn` is not on CRAN, so you need to install it directly from GitHub:
+
+```{r, eval=FALSE}
+library("devtools")
+install_github("davpinto/fastknn")
+```
 
 ### Required Packages
 
+The base of `fastknn` is the `RANN` package, but other packages are required to make `fastknn` work properly. All of them are automatically installed when you install the `fastknn`.
+
+* `RANN` for fast nearest neighbors searching,
+* `magrittr` to use the pipe operator `%>%`,
+* `Metrics` to measure classification performance,
+* `ggplot2` to plot classification decision boundaries,
+* `viridis` for modern color palletes.
+
+### Getting Started
+
+Using `fastknn` is as simple as:
+
+```{r}
+## Load packages
+library("fastknn")
+library("caTools")
+
+## Load toy data
+data("chess", package = "fastknn")
+
+## Split data for training and test
+tr.idx <- caTools::sample.split(Y = chess$y, SplitRatio = 0.7)
+x.tr   <- chess$x[tr.idx, ]
+x.te   <- chess$x[-tr.idx, ]
+y.tr   <- chess$y[tr.idx]
+y.te   <- chess$y[-tr.idx]
+
+## Fit KNN
+yhat <- fastknn(x.tr, y.tr, x.te, k = 10)
+
+## Evaluate model on test set
+sprintf("Accuracy: %.2f", 100 * sum(yhat$class == y.te) / length(y.te))
+```
+
 ## Find the Best k
+
+The `fastknn` provides a interface to select the best `k` using n-fold cross-validation. There 4 possible **loss functions**:
+
+* Overall classification error rate: `eval.metric = "overall_error"`
+* Mean in-class classification error rate: `eval.metric = "mean_error"`
+* Mean in-class AUC: `eval.metric = "auc"`
+* Cross-entropy / logarithmic loss: `eval.metric = "logloss"`
+
+```{r, results='hide'}
+cv.out <- fastknnCV(chess$x, chess$y, k = 3:10, folds = 5, eval.metric = "logloss")
+cv.out$cv_table
+```
+
+```{r, echo=FALSE}
+pander::pander(cv.out$cv_table)
+```
 
 ## Plot Classification Decision Boundary
 

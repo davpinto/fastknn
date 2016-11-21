@@ -80,12 +80,12 @@ fastknn <- function(xtr, ytr, xte, k, method = "dist") {
 #' assigment given by \code{fastknnCV} does stratified sampling.
 #' @param eval loss to use for cross-validation. Currently five options are available:
 #' \itemize{
-#'  \item \code{eval="overal_error"}: default option. It gives the overall 
+#'  \item \code{eval.metric="overal_error"}: default option. It gives the overall 
 #'  misclassification rate.
-#'  \item \code{eval="mean_error"}: gives the average in-class 
+#'  \item \code{eval.metric="mean_error"}: gives the average in-class 
 #'  misclassification rate.
-#'  \item \code{eval="auc"}: gives the average in-class area under the ROC curve.
-#'  \item \code{eval="logloss"}: gives the cross-entropy or logarithmic loss. 
+#'  \item \code{eval.metric="auc"}: gives the average in-class area under the ROC curve.
+#'  \item \code{eval.metric="logloss"}: gives the cross-entropy or logarithmic loss. 
 #' }
 #'
 #' @return \code{list} with cross-validation results:

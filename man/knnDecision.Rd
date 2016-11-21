@@ -4,7 +4,8 @@
 \alias{knnDecision}
 \title{Classification Decision Boundary}
 \usage{
-knnDecision(xtr, ytr, xte, yte, k, method = "dist", dpi = 150)
+knnDecision(xtr, ytr, xte, yte, k, method = "dist", dpi = 150,
+  show = TRUE)
 }
 \arguments{
 \item{xtr}{matrix containing the training instances. If \code{xtr} is not a 
@@ -32,6 +33,9 @@ of the nearest neighbor labels.}
 It means that \code{dpi^2} data points will be generated from the original 
 dataset to draw the decision boundary. So, for large values (>= 300) it may 
 take too much time to plot.}
+
+\item{show}{logical: if TRUE (the default option), the generated \code{ggplot2}
+object will be plotted.}
 }
 \value{
 \code{ggplot2} object.
