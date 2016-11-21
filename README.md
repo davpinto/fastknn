@@ -42,6 +42,7 @@ The base of `fastknn` is the `RANN` package, but other packages are required to 
 
 -   `RANN` for fast nearest neighbors searching,
 -   `magrittr` to use the pipe operator `%>%`,
+-   `pbapply` to show a progress bar during cross-validation,
 -   `Metrics` to measure classification performance,
 -   `ggplot2` to plot classification decision boundaries,
 -   `viridis` for modern color palletes.
@@ -59,6 +60,7 @@ library("caTools")
 data("chess", package = "fastknn")
 
 ## Split data for training and test
+set.seed(123)
 tr.idx <- caTools::sample.split(Y = chess$y, SplitRatio = 0.7)
 x.tr   <- chess$x[tr.idx, ]
 x.te   <- chess$x[-tr.idx, ]
@@ -72,7 +74,7 @@ yhat <- fastknn(x.tr, y.tr, x.te, k = 10)
 sprintf("Accuracy: %.2f", 100 * sum(yhat$class == y.te) / length(y.te))
 ```
 
-    ## [1] "Accuracy: 99.60"
+    ## [1] "Accuracy: 99.30"
 
 Find the Best k
 ---------------
@@ -84,19 +86,29 @@ The `fastknn` provides a interface to select the best `k` using n-fold cross-val
 -   Mean in-class AUC: `eval.metric = "auc"`
 -   Cross-entropy / logarithmic loss: `eval.metric = "logloss"`
 
+Cross-validation using the **voting** probability estimator:
+
 ``` r
-cv.out <- fastknnCV(chess$x, chess$y, k = 3:10, folds = 5, eval.metric = "logloss")
+## Load dataset
+library("mlbench")
+data("Sonar", package = "mlbench")
+x <- data.matrix(Sonar[, -61])
+y <- Sonar$Class
+
+## 5-fold CV using log-loss as evaluation metric
+set.seed(123)
+cv.out <- fastknnCV(x, y, k = 3:15, method = "vote", folds = 5, eval.metric = "logloss")
 cv.out$cv_table
 ```
 
-<table style="width:78%;">
+<table style="width:76%;">
 <colgroup>
 <col width="12%" />
 <col width="12%" />
 <col width="12%" />
 <col width="12%" />
 <col width="12%" />
-<col width="11%" />
+<col width="9%" />
 <col width="4%" />
 </colgroup>
 <thead>
@@ -112,82 +124,320 @@ cv.out$cv_table
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center">0.1903</td>
-<td align="center">0.1079</td>
-<td align="center">0.1156</td>
-<td align="center">0.1021</td>
-<td align="center">0.1108</td>
-<td align="center">0.1253</td>
+<td align="center">2.638</td>
+<td align="center">3.629</td>
+<td align="center">2.721</td>
+<td align="center">1.895</td>
+<td align="center">0.9809</td>
+<td align="center">2.373</td>
 <td align="center">3</td>
 </tr>
 <tr class="even">
-<td align="center">0.1131</td>
-<td align="center">0.0283</td>
-<td align="center">0.1158</td>
-<td align="center">0.1056</td>
-<td align="center">0.03456</td>
-<td align="center">0.07948</td>
+<td align="center">1.139</td>
+<td align="center">2.079</td>
+<td align="center">2.789</td>
+<td align="center">1.104</td>
+<td align="center">0.2251</td>
+<td align="center">1.467</td>
 <td align="center">4</td>
 </tr>
 <tr class="odd">
-<td align="center">0.03367</td>
-<td align="center">0.02878</td>
-<td align="center">0.119</td>
-<td align="center">0.03051</td>
-<td align="center">0.03519</td>
-<td align="center">0.04943</td>
+<td align="center">1.203</td>
+<td align="center">1.304</td>
+<td align="center">2.791</td>
+<td align="center">1.133</td>
+<td align="center">0.315</td>
+<td align="center">1.349</td>
 <td align="center">5</td>
 </tr>
 <tr class="even">
-<td align="center">0.03087</td>
-<td align="center">0.03271</td>
-<td align="center">0.1206</td>
-<td align="center">0.03395</td>
-<td align="center">0.0356</td>
-<td align="center">0.05075</td>
+<td align="center">0.5285</td>
+<td align="center">1.333</td>
+<td align="center">2.011</td>
+<td align="center">1.198</td>
+<td align="center">0.358</td>
+<td align="center">1.086</td>
 <td align="center">6</td>
 </tr>
 <tr class="odd">
-<td align="center">0.03544</td>
-<td align="center">0.03605</td>
-<td align="center">0.123</td>
-<td align="center">0.03548</td>
-<td align="center">0.03683</td>
-<td align="center">0.05335</td>
+<td align="center">0.5567</td>
+<td align="center">0.5874</td>
+<td align="center">2.031</td>
+<td align="center">1.244</td>
+<td align="center">0.3923</td>
+<td align="center">0.9622</td>
 <td align="center">7</td>
 </tr>
 <tr class="even">
-<td align="center">0.03736</td>
-<td align="center">0.03617</td>
-<td align="center">0.04127</td>
-<td align="center">0.03533</td>
-<td align="center">0.03749</td>
-<td align="center">0.03752</td>
+<td align="center">0.5657</td>
+<td align="center">0.593</td>
+<td align="center">2.058</td>
+<td align="center">1.244</td>
+<td align="center">0.417</td>
+<td align="center">0.9755</td>
 <td align="center">8</td>
 </tr>
 <tr class="odd">
-<td align="center">0.0401</td>
-<td align="center">0.04094</td>
-<td align="center">0.04237</td>
-<td align="center">0.03635</td>
-<td align="center">0.03794</td>
-<td align="center">0.03954</td>
+<td align="center">0.5502</td>
+<td align="center">0.6228</td>
+<td align="center">1.286</td>
+<td align="center">0.4712</td>
+<td align="center">0.4478</td>
+<td align="center">0.6757</td>
 <td align="center">9</td>
 </tr>
 <tr class="even">
-<td align="center">0.04242</td>
-<td align="center">0.04259</td>
-<td align="center">0.04379</td>
-<td align="center">0.03722</td>
-<td align="center">0.03913</td>
-<td align="center">0.04103</td>
+<td align="center">0.5864</td>
+<td align="center">0.6344</td>
+<td align="center">0.5025</td>
+<td align="center">0.4843</td>
+<td align="center">0.4854</td>
+<td align="center">0.5386</td>
 <td align="center">10</td>
+</tr>
+<tr class="odd">
+<td align="center">0.5975</td>
+<td align="center">0.6518</td>
+<td align="center">0.5116</td>
+<td align="center">0.4765</td>
+<td align="center">0.5134</td>
+<td align="center">0.5502</td>
+<td align="center">11</td>
+</tr>
+<tr class="even">
+<td align="center">0.6059</td>
+<td align="center">0.6543</td>
+<td align="center">0.5022</td>
+<td align="center">0.4897</td>
+<td align="center">0.5383</td>
+<td align="center">0.5581</td>
+<td align="center">12</td>
+</tr>
+<tr class="odd">
+<td align="center">0.5996</td>
+<td align="center">0.6642</td>
+<td align="center">0.5212</td>
+<td align="center">0.5132</td>
+<td align="center">0.566</td>
+<td align="center">0.5728</td>
+<td align="center">13</td>
+</tr>
+<tr class="even">
+<td align="center">0.6114</td>
+<td align="center">0.6572</td>
+<td align="center">0.5283</td>
+<td align="center">0.5242</td>
+<td align="center">0.5882</td>
+<td align="center">0.5819</td>
+<td align="center">14</td>
+</tr>
+<tr class="odd">
+<td align="center">0.6163</td>
+<td align="center">0.6416</td>
+<td align="center">0.5416</td>
+<td align="center">0.5449</td>
+<td align="center">0.5959</td>
+<td align="center">0.5881</td>
+<td align="center">15</td>
 </tr>
 </tbody>
 </table>
 
+Cross-validation using the **weighted voting** probability estimator:
+
+``` r
+## 5-fold CV using log-loss as evaluation metric
+set.seed(123)
+cv.out <- fastknnCV(x, y, k = 3:15, method = "dist", folds = 5, eval.metric = "logloss")
+cv.out$cv_table
+```
+
+<table style="width:76%;">
+<colgroup>
+<col width="12%" />
+<col width="12%" />
+<col width="12%" />
+<col width="12%" />
+<col width="12%" />
+<col width="9%" />
+<col width="4%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">fold_1</th>
+<th align="center">fold_2</th>
+<th align="center">fold_3</th>
+<th align="center">fold_4</th>
+<th align="center">fold_5</th>
+<th align="center">mean</th>
+<th align="center">k</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">2.626</td>
+<td align="center">3.608</td>
+<td align="center">2.707</td>
+<td align="center">1.891</td>
+<td align="center">0.9645</td>
+<td align="center">2.359</td>
+<td align="center">3</td>
+</tr>
+<tr class="even">
+<td align="center">1.111</td>
+<td align="center">2.052</td>
+<td align="center">2.766</td>
+<td align="center">1.094</td>
+<td align="center">0.1965</td>
+<td align="center">1.444</td>
+<td align="center">4</td>
+</tr>
+<tr class="odd">
+<td align="center">1.15</td>
+<td align="center">1.263</td>
+<td align="center">2.766</td>
+<td align="center">1.112</td>
+<td align="center">0.2682</td>
+<td align="center">1.312</td>
+<td align="center">5</td>
+</tr>
+<tr class="even">
+<td align="center">0.4569</td>
+<td align="center">1.288</td>
+<td align="center">1.987</td>
+<td align="center">1.165</td>
+<td align="center">0.2946</td>
+<td align="center">1.038</td>
+<td align="center">6</td>
+</tr>
+<tr class="odd">
+<td align="center">0.4715</td>
+<td align="center">0.5304</td>
+<td align="center">1.999</td>
+<td align="center">1.199</td>
+<td align="center">0.3192</td>
+<td align="center">0.9039</td>
+<td align="center">7</td>
+</tr>
+<tr class="even">
+<td align="center">0.4786</td>
+<td align="center">0.5315</td>
+<td align="center">2.022</td>
+<td align="center">1.2</td>
+<td align="center">0.3391</td>
+<td align="center">0.9142</td>
+<td align="center">8</td>
+</tr>
+<tr class="odd">
+<td align="center">0.4628</td>
+<td align="center">0.5587</td>
+<td align="center">1.246</td>
+<td align="center">0.4257</td>
+<td align="center">0.3636</td>
+<td align="center">0.6114</td>
+<td align="center">9</td>
+</tr>
+<tr class="even">
+<td align="center">0.4918</td>
+<td align="center">0.5664</td>
+<td align="center">0.4651</td>
+<td align="center">0.4357</td>
+<td align="center">0.3912</td>
+<td align="center">0.47</td>
+<td align="center">10</td>
+</tr>
+<tr class="odd">
+<td align="center">0.5002</td>
+<td align="center">0.5783</td>
+<td align="center">0.4686</td>
+<td align="center">0.427</td>
+<td align="center">0.415</td>
+<td align="center">0.4778</td>
+<td align="center">11</td>
+</tr>
+<tr class="even">
+<td align="center">0.5101</td>
+<td align="center">0.5768</td>
+<td align="center">0.4625</td>
+<td align="center">0.4367</td>
+<td align="center">0.4386</td>
+<td align="center">0.485</td>
+<td align="center">12</td>
+</tr>
+<tr class="odd">
+<td align="center">0.503</td>
+<td align="center">0.5861</td>
+<td align="center">0.4765</td>
+<td align="center">0.4542</td>
+<td align="center">0.4626</td>
+<td align="center">0.4965</td>
+<td align="center">13</td>
+</tr>
+<tr class="even">
+<td align="center">0.5116</td>
+<td align="center">0.5794</td>
+<td align="center">0.4826</td>
+<td align="center">0.4663</td>
+<td align="center">0.4836</td>
+<td align="center">0.5047</td>
+<td align="center">14</td>
+</tr>
+<tr class="odd">
+<td align="center">0.5194</td>
+<td align="center">0.5742</td>
+<td align="center">0.4938</td>
+<td align="center">0.4842</td>
+<td align="center">0.4926</td>
+<td align="center">0.5128</td>
+<td align="center">15</td>
+</tr>
+</tbody>
+</table>
+
+Note that the mean **log-loss** for the **weighted voting** estimator is lower for every `k` evaluated.
+
 Plot Classification Decision Boundary
 -------------------------------------
+
+### Two-class Problem
+
+``` r
+## Load toy data
+data("spirals", package = "fastknn")
+
+## Split data for training and test
+set.seed(123)
+tr.idx <- caTools::sample.split(Y = spirals$y, SplitRatio = 0.7)
+x.tr   <- spirals$x[tr.idx, ]
+x.te   <- spirals$x[-tr.idx, ]
+y.tr   <- spirals$y[tr.idx]
+y.te   <- spirals$y[-tr.idx]
+
+## Plot decision boundary
+knnDecision(x.tr, y.tr, x.te, y.te, k = 15)
+```
+
+<img src="README_files/figure-markdown_github/unnamed-chunk-7-1.png" width="\textwidth" style="display: block; margin: auto;" />
+
+### Multi-class Problem
+
+``` r
+## Load toy data
+data("multi_spirals", package = "fastknn")
+
+## Split data for training and test
+set.seed(123)
+tr.idx <- caTools::sample.split(Y = multi_spirals$y, SplitRatio = 0.7)
+x.tr   <- multi_spirals$x[tr.idx, ]
+x.te   <- multi_spirals$x[-tr.idx, ]
+y.tr   <- multi_spirals$y[tr.idx]
+y.te   <- multi_spirals$y[-tr.idx]
+
+## Plot decision boundary
+knnDecision(x.tr, y.tr, x.te, y.te, k = 15)
+```
+
+<img src="README_files/figure-markdown_github/unnamed-chunk-8-1.png" width="\textwidth" style="display: block; margin: auto;" />
 
 Benchmark
 ---------

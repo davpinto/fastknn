@@ -1,23 +1,22 @@
 ---
 title: "Fast k-Nearest Neighbor Classifier"
-output: 
+output:
    pdf_document: 
-     highlight: zenburn
-     toc: yes
-     toc_depth: 2
-   github_document:
+      toc: true
+      toc_depth: 2
+   github_document: 
       toc: true
       toc_depth: 2
 urlcolor: magenta
 ---
 
 ```{r setup, include=FALSE}
-## rmarkdown::render('README.Rmd', 'pdf_document')
 ## rmarkdown::render('README.Rmd', 'github_document')
+## rmarkdown::render('README.Rmd', 'pdf_document')
 
-knitr::opts_chunk$set(echo = TRUE, out.width = "\\textwidth",  
-                      message = FALSE, warning = FALSE,
-                      fig.align = "center", fig.height = 4, dpi = 120)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, 
+                      out.width = "\\textwidth", fig.align = "center", 
+                      fig.height = 4, dpi = 120)
 ```
 
 > Fast KNN with shrinkage estimator for the class membership probabilities
@@ -53,6 +52,7 @@ The base of `fastknn` is the `RANN` package, but other packages are required to 
 
 * `RANN` for fast nearest neighbors searching,
 * `magrittr` to use the pipe operator `%>%`,
+* `pbapply` to show a progress bar during cross-validation,
 * `Metrics` to measure classification performance,
 * `ggplot2` to plot classification decision boundaries,
 * `viridis` for modern color palletes.
@@ -70,6 +70,7 @@ library("caTools")
 data("chess", package = "fastknn")
 
 ## Split data for training and test
+set.seed(123)
 tr.idx <- caTools::sample.split(Y = chess$y, SplitRatio = 0.7)
 x.tr   <- chess$x[tr.idx, ]
 x.te   <- chess$x[-tr.idx, ]
@@ -92,8 +93,18 @@ The `fastknn` provides a interface to select the best `k` using n-fold cross-val
 * Mean in-class AUC: `eval.metric = "auc"`
 * Cross-entropy / logarithmic loss: `eval.metric = "logloss"`
 
+Cross-validation using the **voting** probability estimator:
+
 ```{r, results='hide'}
-cv.out <- fastknnCV(chess$x, chess$y, k = 3:10, folds = 5, eval.metric = "logloss")
+## Load dataset
+library("mlbench")
+data("Sonar", package = "mlbench")
+x <- data.matrix(Sonar[, -61])
+y <- Sonar$Class
+
+## 5-fold CV using log-loss as evaluation metric
+set.seed(123)
+cv.out <- fastknnCV(x, y, k = 3:15, method = "vote", folds = 5, eval.metric = "logloss")
 cv.out$cv_table
 ```
 
@@ -101,6 +112,57 @@ cv.out$cv_table
 pander::pander(cv.out$cv_table)
 ```
 
+Cross-validation using the **weighted voting** probability estimator:
+
+```{r, results='hide'}
+## 5-fold CV using log-loss as evaluation metric
+set.seed(123)
+cv.out <- fastknnCV(x, y, k = 3:15, method = "dist", folds = 5, eval.metric = "logloss")
+cv.out$cv_table
+```
+
+```{r, echo=FALSE}
+pander::pander(cv.out$cv_table)
+```
+
+Note that the mean **log-loss** for the **weighted voting** estimator is lower for every `k` evaluated.
+
 ## Plot Classification Decision Boundary
+
+### Two-class Problem
+
+```{r}
+## Load toy data
+data("spirals", package = "fastknn")
+
+## Split data for training and test
+set.seed(123)
+tr.idx <- caTools::sample.split(Y = spirals$y, SplitRatio = 0.7)
+x.tr   <- spirals$x[tr.idx, ]
+x.te   <- spirals$x[-tr.idx, ]
+y.tr   <- spirals$y[tr.idx]
+y.te   <- spirals$y[-tr.idx]
+
+## Plot decision boundary
+knnDecision(x.tr, y.tr, x.te, y.te, k = 15)
+```
+
+### Multi-class Problem
+
+```{r}
+## Load toy data
+data("multi_spirals", package = "fastknn")
+
+## Split data for training and test
+set.seed(123)
+tr.idx <- caTools::sample.split(Y = multi_spirals$y, SplitRatio = 0.7)
+x.tr   <- multi_spirals$x[tr.idx, ]
+x.te   <- multi_spirals$x[-tr.idx, ]
+y.tr   <- multi_spirals$y[tr.idx]
+y.te   <- multi_spirals$y[-tr.idx]
+
+## Plot decision boundary
+knnDecision(x.tr, y.tr, x.te, y.te, k = 15)
+```
 
 ## Benchmark

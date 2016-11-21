@@ -10,7 +10,8 @@ Imports:
     RANN (>= 2.5),
     Metrics (>= 0.1.1),
     viridis (>= 0.3.4),
-    magrittr (>= 1.5)
+    magrittr (>= 1.5),
+    pbapply (>= 1.1-1)
 Suggests:
     mlbench (>= 2.1-1),
     caTools (>= 1.17.1)
