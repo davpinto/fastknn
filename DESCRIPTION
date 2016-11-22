@@ -20,5 +20,3 @@ License: GPL-2
 URL: https://github.com/davpinto/fastknn
 BugReports: https://github.com/davpinto/fastknn/issues
 LazyData: true
-VignetteBuilder: knitr
-RoxygenNote: 5.0.1

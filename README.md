@@ -9,7 +9,7 @@ Fast k-Nearest Neighbor Classifier
 
 > Fast KNN with shrinkage estimator for the class membership probabilities
 
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/fastknn)](https://cran.r-project.org/package=fastknn)
+[![Travis-CI Build Status](https://travis-ci.org/davpinto/fastknn.svg?branch=master)](https://travis-ci.org/davpinto/fastknn) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/fastknn)](https://cran.r-project.org/package=fastknn)
 
 Fast Nearest Neighbor Searching
 -------------------------------
@@ -19,7 +19,7 @@ The `fastknn` method implements a k-Nearest Neighbor (KNN) classifier based on t
 The FastKNN Classifier
 ----------------------
 
-The `fastknn` was developed to deal with very large datasets (&gt; 100k rows) and is ideal to [Kaggle](https://www.kaggle.com) competitions. It can be about 50x faster then the popular `knn` method from the `R` package [class](https://cran.r-project.org/web/packages/class), for large datasets. Moreover, `fastknn` provides a shrinkage estimator to the class membership probabilities, based on the inverse distances of the nearest neighbors (**see the PDF version**):
+The `fastknn` was developed to deal with very large datasets (&gt; 100k rows) and is ideal to [Kaggle](https://www.kaggle.com) competitions. It can be about 50x faster then the popular `knn` method from the `R` package [class](https://cran.r-project.org/web/packages/class), for large datasets. Moreover, `fastknn` provides a shrinkage estimator to the class membership probabilities, based on the inverse distances of the nearest neighbors (**download** the `README.html` file to see equations):
 
 \[
 P(x_i \in y_j) = \displaystyle\frac{\displaystyle\sum\limits_{k=1}^K \left( \frac{1}{d_{ik}}\cdot(n_{ik} \in y_j) \right)}{\displaystyle\sum\limits_{k=1}^K \left( \frac{1}{d_{ik}} \right)}
