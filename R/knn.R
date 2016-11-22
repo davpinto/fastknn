@@ -24,6 +24,12 @@
 fastknn <- function(xtr, ytr, xte, k, method = "dist") {
    
    #### Check args
+   stopifnot(is.matrix(xtr))
+   stopifnot(is.factor(ytr))
+   stopifnot(nrow(xtr) == length(ytr))
+   stopifnot(is.matrix(xte))
+   stopifnot(is.numeric(k))
+   stopifnot(method %in% c("vote","dist"))
    if (length(k) > 1) {
       stop("k must be a single value")
    }
@@ -54,6 +60,7 @@ fastknn <- function(xtr, ytr, xte, k, method = "dist") {
       }
    )
    knn.prob <- as.matrix(do.call('cbind.data.frame', knn.prob))
+   knn.prob <- sweep(knn.prob, 1, rowSums(knn.prob), "/")
    rm(list = c('knn.search', 'label.mat'))
    gc()
    

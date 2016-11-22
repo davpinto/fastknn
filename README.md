@@ -9,6 +9,8 @@ Fast k-Nearest Neighbor Classifier
 
 > Fast KNN with shrinkage estimator for the class membership probabilities
 
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/fastknn)](https://cran.r-project.org/package=fastknn)
+
 Fast Nearest Neighbor Searching
 -------------------------------
 
@@ -399,7 +401,7 @@ Note that the mean **log-loss** for the **weighted voting** estimator is lower f
 Plot Classification Decision Boundary
 -------------------------------------
 
-The `fastknn` provides a plotting function, based on `ggplot2`, to draw bi-dimensional decision boundaries. If your dataset has more than 3 variables, only the first two will be considered. In future versions of `fastknn` the most descriptive variables will be selected automatically beforehand, using a **feature ranking** tecnique.
+The `fastknn` provides a plotting function, based on `ggplot2`, to draw bi-dimensional decision boundaries. If your dataset has more than 2 variables, only the first two will be considered. In future versions of `fastknn` the most descriptive variables will be selected automatically beforehand, using a **feature ranking** technique.
 
 ### Two-class Problem
 
