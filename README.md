@@ -5,7 +5,7 @@ Fast k-Nearest Neighbor Classifier
 -   [The FastKNN Classifier](#the-fastknn-classifier)
 -   [Find the Best k](#find-the-best-k)
 -   [Plot Classification Decision Boundary](#plot-classification-decision-boundary)
--   [Benchmark](#benchmark)
+-   [Performance Test](#performance-test)
 
 > Fast KNN with shrinkage estimator for the class membership probabilities
 
@@ -79,7 +79,7 @@ sprintf("Accuracy: %.2f", 100 * sum(yhat$class == y.te) / length(y.te))
 Find the Best k
 ---------------
 
-The `fastknn` provides a interface to select the best `k` using n-fold cross-validation. There 4 possible **loss functions**:
+The `fastknn` provides a interface to select the best `k` using n-fold cross-validation. There are 4 possible **loss functions**:
 
 -   Overall classification error rate: `eval.metric = "overall_error"`
 -   Mean in-class classification error rate: `eval.metric = "mean_error"`
@@ -399,6 +399,8 @@ Note that the mean **log-loss** for the **weighted voting** estimator is lower f
 Plot Classification Decision Boundary
 -------------------------------------
 
+The `fastknn` provides a plotting function, based on `ggplot2`, to draw bi-dimensional decision boundaries. If your dataset has more than 3 variables, only the first two will be considered. In future versions of `fastknn` the most descriptive variables will be selected automatically beforehand, using a **feature ranking** tecnique.
+
 ### Two-class Problem
 
 ``` r
@@ -439,5 +441,211 @@ knnDecision(x.tr, y.tr, x.te, y.te, k = 15)
 
 <img src="README_files/figure-markdown_github/unnamed-chunk-8-1.png" width="\textwidth" style="display: block; margin: auto;" />
 
-Benchmark
----------
+Performance Test
+----------------
+
+Here we test the performance of `fastknn` on the [Covertype](https://archive.ics.uci.edu/ml/datasets/Covertype) datset. It is hosted on [UCI](https://archive.ics.uci.edu/ml/) repository and has been already used in a **Kaggle** [competition](https://www.kaggle.com/c/forest-cover-type-prediction). The dataset contains 581012 observations on 54 numeric features, classified into 7 different categories.
+
+All experiments were conducted on a **64-bit Ubuntu 16.04 with Intel Core i7-6700HQ 2.60GHz and 16GB RAM DDR4**.
+
+### Computing Time
+
+Here `fastknn` is compared with the `knn` method from the package `class`. We had to use small samples from the Covertype data because `knn` takes too much time (&gt; 1500s) to fit the entire dataset.
+
+``` r
+#### Load packages
+library('class')
+library('fastknn')
+library('readr')
+library('caTools')
+
+#### Load data
+dtset <- read_csv('./data/covertype_sample.csv.gz')
+dtset$Target <- as.factor(dtset$Target)
+
+#### Test with different sample sizes
+N <- nrow(dtset)
+sample.frac <- c(10e3, 15e3, 20e3)/N
+res <- lapply(sample.frac, function(frac, dt) {
+   ## Reduce datset
+   set.seed(123)
+   sample.idx <- sample.split(dt$Target, SplitRatio = frac)
+   x <- as.matrix(dt[sample.idx, -55])
+   y <- dt$Target[sample.idx]
+   
+   ## Split data
+   set.seed(123)
+   tr.idx <- sample.split(y, SplitRatio = 0.7)
+   x.tr   <- x[tr.idx, ]
+   x.te   <- x[-tr.idx, ]
+   y.tr   <- y[tr.idx]
+   y.te   <- y[-tr.idx]
+   
+   ## Measure time
+   t1 <- system.time({
+      yhat1 <- knn(train = x.tr, test = x.te, cl = y.tr, k = 10, prob = TRUE)
+   })
+   t2 <- system.time({
+      yhat2 <- fastknn(xtr = x.tr, ytr = y.tr, xte = x.te, k = 10, method = "dist")
+   })
+   
+   ## Return
+   list(
+      method = c('knn', 'fastknn'),
+      nobs = as.integer(rep(N*frac, 2)),
+      time_sec = c(t1[3], t2[3]), 
+      accuracy = round(100 * c(sum(yhat1 == y.te), sum(yhat2$class == y.te)) / length(y.te), 2)
+   )
+}, dt = dtset)
+res <- do.call('rbind.data.frame', res)
+res
+```
+
+<table style="width:53%;">
+<colgroup>
+<col width="12%" />
+<col width="9%" />
+<col width="15%" />
+<col width="15%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">method</th>
+<th align="center">nobs</th>
+<th align="center">time_sec</th>
+<th align="center">accuracy</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">knn</td>
+<td align="center">10000</td>
+<td align="center">4.07</td>
+<td align="center">76.33</td>
+</tr>
+<tr class="even">
+<td align="center">fastknn</td>
+<td align="center">10000</td>
+<td align="center">0.389</td>
+<td align="center">93.11</td>
+</tr>
+<tr class="odd">
+<td align="center">knn</td>
+<td align="center">15000</td>
+<td align="center">8.934</td>
+<td align="center">77.97</td>
+</tr>
+<tr class="even">
+<td align="center">fastknn</td>
+<td align="center">15000</td>
+<td align="center">0.302</td>
+<td align="center">93.05</td>
+</tr>
+<tr class="odd">
+<td align="center">knn</td>
+<td align="center">20000</td>
+<td align="center">16.02</td>
+<td align="center">79.74</td>
+</tr>
+<tr class="even">
+<td align="center">fastknn</td>
+<td align="center">20000</td>
+<td align="center">0.356</td>
+<td align="center">94.11</td>
+</tr>
+</tbody>
+</table>
+
+The `fastknn` takes **about 5s** to fit the entire dataset.
+
+### Probability Prediction
+
+We compared the `voting` estimator with the `weighted voting` estimator:
+
+**Voting**
+
+``` r
+#### Extract input variables and response variable
+x <- as.matrix(dtset[, -55])
+y <- dtset$Target
+
+#### 5-fold cross-validation
+res <- fastknnCV(x, y, k = 10, method = "vote", folds = 5, eval.metric = "logloss")
+res$cv_table
+```
+
+<table style="width:76%;">
+<colgroup>
+<col width="12%" />
+<col width="12%" />
+<col width="12%" />
+<col width="12%" />
+<col width="12%" />
+<col width="9%" />
+<col width="4%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">fold_1</th>
+<th align="center">fold_2</th>
+<th align="center">fold_3</th>
+<th align="center">fold_4</th>
+<th align="center">fold_5</th>
+<th align="center">mean</th>
+<th align="center">k</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">0.5832</td>
+<td align="center">0.5771</td>
+<td align="center">0.6116</td>
+<td align="center">0.5601</td>
+<td align="center">0.5606</td>
+<td align="center">0.5785</td>
+<td align="center">10</td>
+</tr>
+</tbody>
+</table>
+
+**Weighted Voting**
+
+``` r
+#### 5-fold cross-validation
+res <- fastknnCV(x, y, k = 10, method = "dist", folds = 5, eval.metric = "logloss")
+res$cv_table
+```
+
+<table style="width:76%;">
+<colgroup>
+<col width="12%" />
+<col width="12%" />
+<col width="12%" />
+<col width="12%" />
+<col width="12%" />
+<col width="9%" />
+<col width="4%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">fold_1</th>
+<th align="center">fold_2</th>
+<th align="center">fold_3</th>
+<th align="center">fold_4</th>
+<th align="center">fold_5</th>
+<th align="center">mean</th>
+<th align="center">k</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">0.5444</td>
+<td align="center">0.5499</td>
+<td align="center">0.5077</td>
+<td align="center">0.4804</td>
+<td align="center">0.5885</td>
+<td align="center">0.5342</td>
+<td align="center">10</td>
+</tr>
+</tbody>
+</table>
