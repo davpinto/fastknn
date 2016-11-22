@@ -85,7 +85,7 @@ fastknn <- function(xtr, ytr, xte, k, method = "dist") {
 #' @param folds number of folds (default is 5) or an array with fold ids between 
 #' 1 and \code{n} identifying what fold each observation is in. The fold 
 #' assigment given by \code{fastknnCV} does stratified sampling.
-#' @param eval loss to use for cross-validation. Currently five options are available:
+#' @param eval.metric loss to use for cross-validation. Currently five options are available:
 #' \itemize{
 #'  \item \code{eval.metric="overal_error"}: default option. It gives the overall 
 #'  misclassification rate.

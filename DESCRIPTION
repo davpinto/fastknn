@@ -1,10 +1,16 @@
 Package: fastknn
 Version: 0.1.0
 Title: Build Fast k-Nearest Neighbor Classifiers
-Description: A fast KNN learner for binary and multinomial classification problems, build upon the ANN library. It has been developed to deal with very large datasets (> 100k rows). The 'fastknn' makes it easy to find the best 'k' and to plot beautiful decision boundaries for the classifiers. Moreover, it provides estimators for the class membership probabilities based on voting and weighted voting. The last one gives more calibrated probabilities in general, and reduces log-loss.  
+Description: A fast KNN learner for binary and multinomial classification
+    problems, build upon the ANN library. It has been developed to deal with very
+    large datasets (> 100k rows). The 'fastknn' makes it easy to find the best 'k'
+    and to plot beautiful decision boundaries for the classifiers. Moreover, it
+    provides estimators for the class membership probabilities based on voting and
+    weighted voting. The last one gives more calibrated probabilities in general,
+    and reduces log-loss.
 Authors@R: person("David", "Pinto", , "david@nexer.com.br", c("aut", "cre"))
 Depends:
-    R (>= 3.3.1), 
+    R (>= 3.3.1),
     ggplot2 (>= 2.1.0)
 Imports:
     RANN (>= 2.5),
@@ -20,3 +26,4 @@ License: GPL-2
 URL: https://github.com/davpinto/fastknn
 BugReports: https://github.com/davpinto/fastknn/issues
 LazyData: true
+RoxygenNote: 5.0.1

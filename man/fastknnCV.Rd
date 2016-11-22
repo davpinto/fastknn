@@ -20,7 +20,7 @@ fastknnCV(x, y, k = 3:15, method = "dist", folds = 5,
 1 and \code{n} identifying what fold each observation is in. The fold 
 assigment given by \code{fastknnCV} does stratified sampling.}
 
-\item{eval}{loss to use for cross-validation. Currently five options are available:
+\item{eval.metric}{loss to use for cross-validation. Currently five options are available:
 \itemize{
  \item \code{eval.metric="overal_error"}: default option. It gives the overall 
  misclassification rate.
