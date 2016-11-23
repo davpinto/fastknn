@@ -1,0 +1,141 @@
+---
+author: "David Pinto"
+title: "Introduction to fastknn"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{fastknn}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, 
+                      fig.align = "center", fig.width = 5,
+                      fig.height = 3, dpi = 120)
+```
+
+The goal of **fastknn** is to make it easy for machine learning researchers and Kaggle competitors to create and tune KNN classifiers for very large datasets. It is based on the [ANN](https://www.cs.umd.edu/~mount/ANN/) library for fast nearest neighbor searching.
+
+## Getting Started
+
+In this example **fastknn** is applied over a sample of size 50k from the [Covertype](https://archive.ics.uci.edu/ml/datasets/Covertype) dataset. It contains 54 binary variables and 7 possible class labels.
+
+```{r, results='hide'}
+## Load packages
+library("fastknn")
+library("caTools")
+
+## Load data
+data("covertype", package = "fastknn")
+x <- as.matrix(covertype[, -55])
+y <- as.factor(covertype$Target)
+
+## Split data for training and test
+set.seed(123)
+tr.idx <- caTools::sample.split(Y = y, SplitRatio = 0.7)
+x.tr   <- x[tr.idx, ]
+x.te   <- x[-tr.idx, ]
+y.tr   <- y[tr.idx]
+y.te   <- y[-tr.idx]
+
+## Fit KNN
+t1 <- system.time({
+   knn.out <- fastknn(x.tr, y.tr, x.te, k = 15, method = "dist")
+})
+t1
+```
+
+```{r, echo=FALSE}
+pander::pander(as.data.frame.list(t1)[,1:3])
+```
+
+Extremely fast!
+
+## Find the Best k
+
+The **fastknn** provides a n-fold cross-validation procedure to define the best *k* according to 4 different evaluation metrics:
+
+1. `"overall_error"`: overall misclassification rate
+1. `"mean_error"`: average in-class misclassification rate
+1. `"auc"`: average in-class area under the ROC curve
+1. `"logloss"`: cross-entropy error
+
+```{r, results='hide'}
+cv.out <- fastknnCV(x, y, k = c(5, 10, 15), method = "dist", folds = 5, eval.metric = "overall_error")
+cv.out$cv_table
+```
+
+```{r, echo=FALSE}
+pander::pander(cv.out$cv_table)
+```
+
+## Plot Decision Boudaries
+
+The **fastknn** provides a plotting function to draw classification decision boundaries for bi-dimensional datasets.
+
+### Two-class Toy Example
+
+```{r}
+data("spirals", package = "fastknn")
+
+## Split data for training and test
+set.seed(123)
+tr.idx <- caTools::sample.split(Y = spirals$y, SplitRatio = 0.7)
+x.tr   <- spirals$x[tr.idx, ]
+x.te   <- spirals$x[-tr.idx, ]
+y.tr   <- spirals$y[tr.idx]
+y.te   <- spirals$y[-tr.idx]
+
+## Plot decision boudary
+knnDecision(x.tr, y.tr, x.te, y.te, k = 10, method = "dist")
+```
+
+### Multi-class Toy Example
+
+```{r}
+data("multi_spirals", package = "fastknn")
+
+## Split data for training and test
+set.seed(123)
+tr.idx <- caTools::sample.split(Y = multi_spirals$y, SplitRatio = 0.7)
+x.tr   <- multi_spirals$x[tr.idx, ]
+x.te   <- multi_spirals$x[-tr.idx, ]
+y.tr   <- multi_spirals$y[tr.idx]
+y.te   <- multi_spirals$y[-tr.idx]
+
+## Plot decision boudary
+knnDecision(x.tr, y.tr, x.te, y.te, k = 10, method = "dist")
+```
+
+## Probability Estimation
+
+The **fastknn** provides 2 different estimators to the class membership probabilities:
+
+1. The classical estimator based on the label proportions of the nearest neighbors. This estimator can be thought as of a **voting** rule.
+1. A shrinkage estimator based on the distances from the nearest neighbors, so that those neighbors more close to the test observation have more importante on predicting the class label. This estimator can be thought as of a **weighted voting** rule. In general, it reduces log-loss.
+
+**VOTING**
+
+```{r, results='hide'}
+#### 5-fold cross-validation
+set.seed(123)
+res <- fastknnCV(x, y, k = 10, method = "vote", folds = 5, eval.metric = "logloss")
+res$cv_table
+```
+
+```{r, echo=FALSE}
+pander::pander(res$cv_table)
+```
+
+**WEIGHTED VOTING**
+
+```{r, results='hide'}
+#### 5-fold cross-validation
+set.seed(123)
+res <- fastknnCV(x, y, k = 10, method = "dist", folds = 5, eval.metric = "logloss")
+res$cv_table
+```
+
+```{r, echo=FALSE}
+pander::pander(res$cv_table)
+```

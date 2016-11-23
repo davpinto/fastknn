@@ -5,7 +5,7 @@
 \title{Cross-Validation for fastknn}
 \usage{
 fastknnCV(x, y, k = 3:15, method = "dist", folds = 5,
-  eval.metric = "overall_acc")
+  eval.metric = "overall_error")
 }
 \arguments{
 \item{x}{input matrix of dimension \code{nobs x nvars}.}

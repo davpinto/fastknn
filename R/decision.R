@@ -21,13 +21,11 @@
 #' It means that \code{dpi^2} data points will be generated from the original 
 #' dataset to draw the decision boundary. So, for large values (>= 300) it may 
 #' take too much time to plot.
-#' @param show logical: if TRUE (the default option), the generated \code{ggplot2}
-#' object will be plotted.
 #'
 #' @return \code{ggplot2} object.
 #'
 #' @export
-knnDecision <- function(xtr, ytr, xte, yte, k, method = "dist", dpi = 150, show = TRUE) {
+knnDecision <- function(xtr, ytr, xte, yte, k, method = "dist", dpi = 150) {
    
    #### Resample data
    x1 <- seq(

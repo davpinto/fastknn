@@ -458,12 +458,11 @@ Here `fastknn` is compared with the `knn` method from the package `class`. We ha
 #### Load packages
 library('class')
 library('fastknn')
-library('readr')
 library('caTools')
 
 #### Load data
-dtset <- read_csv('./data/covertype_sample.csv.gz')
-dtset$Target <- as.factor(dtset$Target)
+data("covertype", package = "fastknn")
+covertype$Target <- as.factor(covertype$Target)
 
 #### Test with different sample sizes
 N <- nrow(dtset)
@@ -498,7 +497,7 @@ res <- lapply(sample.frac, function(frac, dt) {
       time_sec = c(t1[3], t2[3]), 
       accuracy = round(100 * c(sum(yhat1 == y.te), sum(yhat2$class == y.te)) / length(y.te), 2)
    )
-}, dt = dtset)
+}, dt = covertype)
 res <- do.call('rbind.data.frame', res)
 res
 ```
@@ -572,6 +571,7 @@ x <- as.matrix(dtset[, -55])
 y <- dtset$Target
 
 #### 5-fold cross-validation
+set.seed(123)
 res <- fastknnCV(x, y, k = 10, method = "vote", folds = 5, eval.metric = "logloss")
 res$cv_table
 ```
@@ -614,6 +614,7 @@ res$cv_table
 
 ``` r
 #### 5-fold cross-validation
+set.seed(123)
 res <- fastknnCV(x, y, k = 10, method = "dist", folds = 5, eval.metric = "logloss")
 res$cv_table
 ```

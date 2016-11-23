@@ -106,7 +106,7 @@ fastknn <- function(xtr, ytr, xte, k, method = "dist") {
 #'  
 #' @export
 fastknnCV <- function(x, y, k = 3:15, method = "dist", folds = 5, 
-                      eval.metric = "overall_acc") {
+                      eval.metric = "overall_error") {
    
    #### Check and create data folds
    if (length(folds) > 1) {
