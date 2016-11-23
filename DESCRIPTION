@@ -21,6 +21,7 @@ Imports:
 Suggests:
     mlbench (>= 2.1-1),
     caTools (>= 1.17.1),
+    pander,
     testthat,
     knitr,
     rmarkdown
