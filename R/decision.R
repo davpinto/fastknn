@@ -62,12 +62,14 @@ knnDecision <- function(xtr, ytr, xte, yte, k, method = "dist", dpi = 150) {
    
    #### Plot decision boundary
    g <- ggplot(data = decision.df) + 
-      geom_tile(aes(x1, x2, fill = y), color = 'transparent', size = 0, alpha = 0.6) +
+      geom_tile(aes_string("x1", "x2", fill = "y"), color = 'transparent', 
+                size = 0, alpha = 0.6) +
       viridis::scale_fill_viridis(guide = 'none', end = 0.6, option = "D",
                                   discrete = ifelse(nlevels(ytr) > 2, TRUE, FALSE)) +
-      geom_contour(aes(x1, x2, z = z), color = 'white', alpha = 0.6, size = 0.5, 
-                   bins = nlevels(ytr) - 1) +
-      geom_point(data = points.df, aes(x1, x2, color = label), alpha = 1, size = 1) + 
+      geom_contour(aes_string("x1", "x2", z = "z"), color = 'white', alpha = 0.6, 
+                   size = 0.5, bins = nlevels(ytr) - 1) +
+      geom_point(data = points.df, aes_string("x1", "x2", color = "label"), 
+                 alpha = 1, size = 1) + 
       viridis::scale_color_viridis(guide = 'none', end = 0.6, option = "D",
                                    discrete = TRUE) +
       labs(x = expression(x[1]), y = expression(x[2]))

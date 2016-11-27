@@ -8,16 +8,16 @@ Description: A fast KNN learner for binary and multinomial classification
     provides estimators for the class membership probabilities based on voting and
     weighted voting. The last one gives more calibrated probabilities in general,
     and reduces log-loss.
-Authors@R: person("David", "Pinto", , "david@nexer.com.br", c("aut", "cre"))
+Authors@R: person("David", "Pinto", email = "david@nexer.com.br", role = c("aut", "cre"))
 Depends:
-    R (>= 3.3.1),
-    ggplot2 (>= 2.1.0)
+    R (>= 3.3.1)
 Imports:
     RANN (>= 2.5),
-    Metrics (>= 0.1.1),
+    ggplot2 (>= 2.1.0),
     viridis (>= 0.3.4),
     magrittr (>= 1.5),
-    pbapply (>= 1.1-1)
+    pbapply (>= 1.1-1),
+    Metrics (>= 0.1.1)
 Suggests:
     mlbench (>= 2.1-1),
     caTools (>= 1.17.1),
