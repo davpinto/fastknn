@@ -6,15 +6,15 @@
 \title{Spirals Dataset}
 \format{A data.frame with 2000 rows and 3 variables:
 \describe{
-  \item{x1}{random generated}
-  \item{x2}{random generated}
-  \item{target}{class labels}
+  \item{x1}{randomly generated numeric feature}
+  \item{x2}{randomly generated numeric feature}
+  \item{target}{factor array with class labels}
 }}
 \usage{
 spirals
 }
 \description{
-Bidimensional binary dataset to be used in toy examples.
+Bidimensional binary dataset to be used as a toy example.
 }
 \keyword{datasets}
 

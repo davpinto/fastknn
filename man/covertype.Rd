@@ -7,13 +7,13 @@
 \format{A data.frame with 50000 rows and 55 variables:
 \describe{
   \item{V1...V54}{binary features}
-  \item{Target}{class labels}
+  \item{Target}{character array with class labels in 7 categories}
 }}
 \usage{
 covertype
 }
 \description{
-Sample of size 50k from the multiclass dataset Covertype from the UCI repository.
+Sample of size 50k from the multiclass dataset Covertype hosted in the UCI repository.
 }
 \keyword{datasets}
 
