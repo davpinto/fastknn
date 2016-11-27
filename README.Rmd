@@ -24,6 +24,23 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE,
                       fig.height = 4, dpi = 120, cache = TRUE)
 ```
 
+******
+
+The `fastknn` in now available on [Kaggle](https://github.com/Kaggle/docker-rstats). Take a look a this [kernel](https://www.kaggle.com/mrisdal/d/uciml/forest-cover-type-dataset/fastknn-visualizing-decision-boundary) to see an example on how to use `fastknn` to improve your performance on **Kaggle** competitions.
+
+******
+
+### Why `fastknn`?
+
+1. Build KNN classifiers with **large datasets** (> 100k rows) in a few seconds.
+1. Predict more **calibrated probabilities** with the `"dist"` estimator and reduce log-loss.
+1. Find the **best k** parameter according to a variety of loss functions, using n-fold cross validation.
+1. Plot beautiful classification **decision boundaries** for your dataset.
+1. Do **feature engineering** and extract high informative features from your dataset. (*work in progress...*)
+1. Compete in **Kaggle**.
+
+Give it a try and let me know what you think!
+
 ## Fast Nearest Neighbor Searching
 
 The `fastknn` method implements a k-Nearest Neighbor (KNN) classifier based on the [ANN](https://www.cs.umd.edu/~mount/ANN) library. ANN is written in `C++` and is able to find the k nearest neighbors for every point in a given dataset in `O(N log N)` time. The package [RANN](https://github.com/jefferis/RANN) provides an easy interface to use ANN library in `R`.

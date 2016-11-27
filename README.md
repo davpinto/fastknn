@@ -1,6 +1,7 @@
 Fast k-Nearest Neighbor Classifier
 ================
 
+-   [Why `fastknn`?](#why-fastknn)
 -   [Fast Nearest Neighbor Searching](#fast-nearest-neighbor-searching)
 -   [The FastKNN Classifier](#the-fastknn-classifier)
 -   [Find the Best k](#find-the-best-k)
@@ -10,6 +11,23 @@ Fast k-Nearest Neighbor Classifier
 > Fast KNN with shrinkage estimator for the class membership probabilities
 
 [![Travis-CI Build Status](https://travis-ci.org/davpinto/fastknn.svg?branch=master)](https://travis-ci.org/davpinto/fastknn) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/fastknn)](https://cran.r-project.org/package=fastknn)
+
+------------------------------------------------------------------------
+
+The `fastknn` in now available on [Kaggle](https://github.com/Kaggle/docker-rstats). Take a look a this [kernel](https://www.kaggle.com/mrisdal/d/uciml/forest-cover-type-dataset/fastknn-visualizing-decision-boundary) to see an example on how to use `fastknn` to improve your performance on **Kaggle** competitions.
+
+------------------------------------------------------------------------
+
+### Why `fastknn`?
+
+1.  Build KNN classifiers with **large datasets** (&gt; 100k rows) in a few seconds.
+2.  Predict more **calibrated probabilities** with the `"dist"` estimator and reduce log-loss.
+3.  Find the **best k** parameter according to a variety of loss functions, using n-fold cross validation.
+4.  Plot beautiful classification **decision boundaries** for your dataset.
+5.  Do **feature engineering** and extract high informative features from your dataset. (*work in progress...*)
+6.  Compete in **Kaggle**.
+
+Give it a try and let me know what you think!
 
 Fast Nearest Neighbor Searching
 -------------------------------
