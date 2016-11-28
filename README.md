@@ -21,7 +21,7 @@ The `fastknn` in now available on [Kaggle](https://github.com/Kaggle/docker-rsta
 ### Why `fastknn`?
 
 1.  Build KNN classifiers with **large datasets** (&gt; 100k rows) in a few seconds.
-2.  Predict more **calibrated probabilities** with the `"dist"` estimator and reduce log-loss.
+2.  Predict more **calibrated probabilities** and reduce log-loss with the `"dist"` estimator.
 3.  Find the **best k** parameter according to a variety of loss functions, using n-fold cross validation.
 4.  Plot beautiful classification **decision boundaries** for your dataset.
 5.  Do **feature engineering** and extract high informative features from your dataset. (*work in progress...*)
@@ -81,7 +81,7 @@ data("chess", package = "fastknn")
 
 ## Split data for training and test
 set.seed(123)
-tr.idx <- caTools::sample.split(Y = chess$y, SplitRatio = 0.7)
+tr.idx <- which(caTools::sample.split(Y = chess$y, SplitRatio = 0.7))
 x.tr   <- chess$x[tr.idx, ]
 x.te   <- chess$x[-tr.idx, ]
 y.tr   <- chess$y[tr.idx]
@@ -94,7 +94,7 @@ yhat <- fastknn(x.tr, y.tr, x.te, k = 10)
 sprintf("Accuracy: %.2f", 100 * sum(yhat$class == y.te) / length(y.te))
 ```
 
-    ## [1] "Accuracy: 99.30"
+    ## [1] "Accuracy: 97.67"
 
 Find the Best k
 ---------------
@@ -429,7 +429,7 @@ data("spirals", package = "fastknn")
 
 ## Split data for training and test
 set.seed(123)
-tr.idx <- caTools::sample.split(Y = spirals$y, SplitRatio = 0.7)
+tr.idx <- which(caTools::sample.split(Y = spirals$y, SplitRatio = 0.7))
 x.tr   <- spirals$x[tr.idx, ]
 x.te   <- spirals$x[-tr.idx, ]
 y.tr   <- spirals$y[tr.idx]
@@ -449,7 +449,7 @@ data("multi_spirals", package = "fastknn")
 
 ## Split data for training and test
 set.seed(123)
-tr.idx <- caTools::sample.split(Y = multi_spirals$y, SplitRatio = 0.7)
+tr.idx <- which(caTools::sample.split(Y = multi_spirals$y, SplitRatio = 0.7))
 x.tr   <- multi_spirals$x[tr.idx, ]
 x.te   <- multi_spirals$x[-tr.idx, ]
 y.tr   <- multi_spirals$y[tr.idx]
@@ -483,18 +483,18 @@ data("covertype", package = "fastknn")
 covertype$Target <- as.factor(covertype$Target)
 
 #### Test with different sample sizes
-N <- nrow(dtset)
+N <- nrow(covertype)
 sample.frac <- c(10e3, 15e3, 20e3)/N
 res <- lapply(sample.frac, function(frac, dt) {
    ## Reduce datset
    set.seed(123)
-   sample.idx <- sample.split(dt$Target, SplitRatio = frac)
+   sample.idx <- which(sample.split(dt$Target, SplitRatio = frac))
    x <- as.matrix(dt[sample.idx, -55])
    y <- dt$Target[sample.idx]
    
    ## Split data
    set.seed(123)
-   tr.idx <- sample.split(y, SplitRatio = 0.7)
+   tr.idx <- which(sample.split(y, SplitRatio = 0.7))
    x.tr   <- x[tr.idx, ]
    x.te   <- x[-tr.idx, ]
    y.tr   <- y[tr.idx]
@@ -585,8 +585,8 @@ We compared the `voting` estimator with the `weighted voting` estimator:
 
 ``` r
 #### Extract input variables and response variable
-x <- as.matrix(dtset[, -55])
-y <- dtset$Target
+x <- as.matrix(covertype[, -55])
+y <- covertype$Target
 
 #### 5-fold cross-validation
 set.seed(123)
