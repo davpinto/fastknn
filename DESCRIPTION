@@ -17,6 +17,7 @@ Imports:
     viridis (>= 0.3.4),
     magrittr (>= 1.5),
     pbapply (>= 1.1-1),
+    matrixStats (>= 0.14.0),
     Metrics (>= 0.1.1)
 Suggests:
     mlbench (>= 2.1-1),
