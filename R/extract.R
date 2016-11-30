@@ -48,11 +48,11 @@ knnExtract <- function(xtr, ytr, xte, k = 5, folds = 5) {
       if (length(unique(folds)) < 3) {
          stop('The smallest number of folds allowable is 3')
       }
-      if (length(unique(folds)) > nrow(x)) {
+      if (length(unique(folds)) > nrow(xtr)) {
          stop('The highest number of folds allowable is nobs (leave-one-out CV)')
       }
    } else {
-      folds <- min(max(3, folds), nrow(x))
+      folds <- min(max(3, folds), nrow(xtr))
       if (folds > 10) {
          warning("The number of folds is greater than 10. It may take too much time.")
       }
