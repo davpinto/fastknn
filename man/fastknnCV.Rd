@@ -17,18 +17,12 @@ fastknnCV(x, y, k = 3:15, method = "dist", folds = 5,
 \item{method}{the probability estimator as in \code{fastknn}.}
 
 \item{folds}{number of folds (default is 5) or an array with fold ids between 
-1 and \code{n} identifying what fold each observation is in. The fold 
-assigment given by \code{fastknnCV} does stratified sampling.}
+1 and \code{n} identifying what fold each observation is in. The smallest 
+value allowable is \code{nfolds=3}. The fold assigment given by 
+\code{fastknnCV} does stratified sampling.}
 
-\item{eval.metric}{loss to use for cross-validation. Currently five options are available:
-\itemize{
- \item \code{eval.metric="overal_error"}: default option. It gives the overall 
- misclassification rate.
- \item \code{eval.metric="mean_error"}: gives the average in-class 
- misclassification rate.
- \item \code{eval.metric="auc"}: gives the average in-class area under the ROC curve.
- \item \code{eval.metric="logloss"}: gives the cross-entropy or logarithmic loss. 
-}}
+\item{eval.metric}{classification loss measure to use in cross-validation. 
+See \code{\link{classLoss}} for more details.}
 }
 \value{
 \code{list} with cross-validation results:

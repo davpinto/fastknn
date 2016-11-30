@@ -83,18 +83,12 @@ fastknn <- function(xtr, ytr, xte, k, method = "dist") {
 #' @param k sequence of possible k values to be evaluated (default is [3:15]).
 #' @param method the probability estimator as in \code{fastknn}.
 #' @param folds number of folds (default is 5) or an array with fold ids between 
-#' 1 and \code{n} identifying what fold each observation is in. The fold 
-#' assigment given by \code{fastknnCV} does stratified sampling.
-#' @param eval.metric loss to use for cross-validation. Currently five options are available:
-#' \itemize{
-#'  \item \code{eval.metric="overal_error"}: default option. It gives the overall 
-#'  misclassification rate.
-#'  \item \code{eval.metric="mean_error"}: gives the average in-class 
-#'  misclassification rate.
-#'  \item \code{eval.metric="auc"}: gives the average in-class area under the ROC curve.
-#'  \item \code{eval.metric="logloss"}: gives the cross-entropy or logarithmic loss. 
-#' }
-#'
+#' 1 and \code{n} identifying what fold each observation is in. The smallest 
+#' value allowable is \code{nfolds=3}. The fold assigment given by 
+#' \code{fastknnCV} does stratified sampling.
+#' @param eval.metric classification loss measure to use in cross-validation. 
+#' See \code{\link{classLoss}} for more details.
+#' 
 #' @return \code{list} with cross-validation results:
 #' \itemize{
 #'  \item \code{best_eval}: the best loss measure found in the 
@@ -103,7 +97,7 @@ fastknn <- function(xtr, ytr, xte, k, method = "dist") {
 #'  \item \code{cv_table}: \code{data.frame} with the test performances for each k 
 #'  on each data fold. 
 #' }
-#'  
+#' 
 #' @export
 fastknnCV <- function(x, y, k = 3:15, method = "dist", folds = 5, 
                       eval.metric = "overall_error") {
@@ -129,7 +123,7 @@ fastknnCV <- function(x, y, k = 3:15, method = "dist", folds = 5,
          te.idx <- which(folds == fold.id)
          y.hat <- fastknn(x[-te.idx,], y[-te.idx], x[te.idx,], k, method)
          classLoss(actual = y[te.idx], predicted = y.hat$class, 
-                   prob = y.hat$prob, metric = eval.metric)
+                   prob = y.hat$prob, eval.metric = eval.metric)
       }, simplify = FALSE, USE.NAMES = TRUE)
    }, x = x, y = y, folds = folds)
    cv.results <- do.call('rbind.data.frame', cv.results)
