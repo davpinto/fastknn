@@ -1,7 +1,35 @@
-#### Classification losses
-classLoss <- function(actual, predicted, prob, metric = "overall_error") {
+#' Classification Performance Measure
+#'
+#' Compute classification performance according to common evaluation metrics: 
+#' classification error, AUC and log-loss.
+#'
+#' There are four evaluation metrics available sor far:
+#' \itemize{
+#'  \item \code{eval.metric="overal_error"}: default option. It gives the 
+#'  overall misclassification rate. It do not require the \code{prob} parameter.
+#'  \item \code{eval.metric="mean_error"}: gives the mean per class 
+#'  misclassification rate. It do not require the \code{prob} parameter.
+#'  \item \code{eval.metric="auc"}: gives the mean per class area under the ROC 
+#'  curve. It requires the \code{prob} parameter.
+#'  \item \code{eval.metric="logloss"}: gives the cross-entropy or logarithmic 
+#'  loss. It requires the \code{prob} parameter.
+#' }
+#'
+#' @param actual factor array with the true class labels.
+#' @param predicted factor array with the predicted class labels.
+#' @param prob matrix with predicted class membership probabilities. 
+#' Rows are observations and columns are classes. It is required to calculate 
+#' AUC and log-loss.
+#' @param eval.metric evaluation metric to be used. It can be one of 
+#' \code{c("overall_error", "mean_error", "auc", "logloss")}. The default 
+#' option is \code{"overall_error"}.
+#'
+#' @return The classification performance measure.
+#'
+#' @export
+classLoss <- function(actual, predicted, prob, eval.metric = "overall_error") {
    loss <- switch(
-      metric,
+      eval.metric,
       "overall_error" = {
          1 - sum(actual == predicted) / length(actual)
       },
