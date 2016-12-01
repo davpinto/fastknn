@@ -7,14 +7,15 @@ Fast k-Nearest Neighbor Classifier
 -   [Find the Best k](#find-the-best-k)
 -   [Plot Classification Decision Boundary](#plot-classification-decision-boundary)
 -   [Performance Test](#performance-test)
+-   [Feature Engineering](#feature-engineering)
 
 > Fast KNN with shrinkage estimator for the class membership probabilities
 
-[![Travis-CI Build Status](https://travis-ci.org/davpinto/fastknn.svg?branch=master)](https://travis-ci.org/davpinto/fastknn) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/fastknn)](https://cran.r-project.org/package=fastknn)
+[![Travis-CI Build Status](https://travis-ci.org/davpinto/fastknn.svg?branch=master)](https://travis-ci.org/davpinto/fastknn) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/fastknn?color=blue)](https://cran.r-project.org/package=fastknn)
 
 ------------------------------------------------------------------------
 
-The `fastknn` in now available on [Kaggle](https://github.com/Kaggle/docker-rstats). Take a look a this [kernel](https://www.kaggle.com/mrisdal/d/uciml/forest-cover-type-dataset/fastknn-visualizing-decision-boundary) to see an example on how to use `fastknn` to improve your performance on **Kaggle** competitions.
+The `fastknn` in now available on [Kaggle](https://github.com/Kaggle/docker-rstats). Take a look a this [kernel](https://www.kaggle.com/davidpinto/d/uciml/forest-cover-type-dataset/fastknn-show-to-glm-what-knn-see-0-96) to see an example on how to use `fastknn` to improve your performance on **Kaggle** competitions.
 
 ------------------------------------------------------------------------
 
@@ -24,7 +25,7 @@ The `fastknn` in now available on [Kaggle](https://github.com/Kaggle/docker-rsta
 2.  Predict more **calibrated probabilities** and reduce log-loss with the `"dist"` estimator.
 3.  Find the **best k** parameter according to a variety of loss functions, using n-fold cross validation.
 4.  Plot beautiful classification **decision boundaries** for your dataset.
-5.  Do **feature engineering** and extract high informative features from your dataset. (*work in progress...*)
+5.  Do **feature engineering** and extract high informative features from your dataset.
 6.  Compete in **Kaggle**.
 
 Give it a try and let me know what you think!
@@ -39,11 +40,11 @@ The FastKNN Classifier
 
 The `fastknn` was developed to deal with very large datasets (&gt; 100k rows) and is ideal to [Kaggle](https://www.kaggle.com) competitions. It can be about 50x faster then the popular `knn` method from the `R` package [class](https://cran.r-project.org/web/packages/class), for large datasets. Moreover, `fastknn` provides a shrinkage estimator to the class membership probabilities, based on the inverse distances of the nearest neighbors (**download** the `README.html` file to see equations):
 
-\[
-P(x_i \in y_j) = \displaystyle\frac{\displaystyle\sum\limits_{k=1}^K \left( \frac{1}{d_{ik}}\cdot(n_{ik} \in y_j) \right)}{\displaystyle\sum\limits_{k=1}^K \left( \frac{1}{d_{ik}} \right)}
-\]
+$$
+P(x\_i \\in y\_j) = \\displaystyle\\frac{\\displaystyle\\sum\\limits\_{k=1}^K \\left( \\frac{1}{d\_{ik}}\\cdot(n\_{ik} \\in y\_j) \\right)}{\\displaystyle\\sum\\limits\_{k=1}^K \\left( \\frac{1}{d\_{ik}} \\right)}
+$$
 
-where \(x_i\) is the \(i^{\text{th}}\) test instance, \(y_j\) is the \(j^{\text{th}}\) unique class label, \(n_{ik}\) is the \(k^{\text{th}}\) nearest neighbor of \(x_i\), and \(d_{ik}\) is the distance between \(x_i\) and \(n_{ik}\). This estimator can be thought of as a weighted voting rule, where those neighbors that are more close to \(x_i\) will have more influence on predicting \(x_i\)'s label.
+where *x*<sub>*i*</sub> is the *i*<sup>th</sup> test instance, *y*<sub>*j*</sub> is the *j*<sup>th</sup> unique class label, *n*<sub>*i**k*</sub> is the *k*<sup>th</sup> nearest neighbor of *x*<sub>*i*</sub>, and *d*<sub>*i**k*</sub> is the distance between *x*<sub>*i*</sub> and *n*<sub>*i**k*</sub>. This estimator can be thought of as a weighted voting rule, where those neighbors that are more close to *x*<sub>*i*</sub> will have more influence on predicting *x*<sub>*i*</sub>'s label.
 
 In general, the weighted estimator provides more **calibrated probabilities** when compared with the traditional estimator based on the label proportions of the nearest neighbors, and reduces **logarithmic loss** (log-loss).
 
@@ -670,3 +671,8 @@ res$cv_table
 </tr>
 </tbody>
 </table>
+
+Feature Engineering
+-------------------
+
+Extracting **KNN features**...

@@ -26,7 +26,7 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE,
 
 ------
 
-The `fastknn` in now available on [Kaggle](https://github.com/Kaggle/docker-rstats). Take a look a this [kernel](https://www.kaggle.com/mrisdal/d/uciml/forest-cover-type-dataset/fastknn-visualizing-decision-boundary) to see an example on how to use `fastknn` to improve your performance on **Kaggle** competitions.
+The `fastknn` in now available on [Kaggle](https://github.com/Kaggle/docker-rstats). Take a look a this [kernel](https://www.kaggle.com/davidpinto/d/uciml/forest-cover-type-dataset/fastknn-show-to-glm-what-knn-see-0-96) to see an example on how to use `fastknn` to improve your performance on **Kaggle** competitions.
 
 ------
 
@@ -36,7 +36,7 @@ The `fastknn` in now available on [Kaggle](https://github.com/Kaggle/docker-rsta
 1. Predict more **calibrated probabilities** and reduce log-loss with the `"dist"` estimator.
 1. Find the **best k** parameter according to a variety of loss functions, using n-fold cross validation.
 1. Plot beautiful classification **decision boundaries** for your dataset.
-1. Do **feature engineering** and extract high informative features from your dataset. (*work in progress...*)
+1. Do **feature engineering** and extract high informative features from your dataset.
 1. Compete in **Kaggle**.
 
 Give it a try and let me know what you think!
@@ -284,3 +284,7 @@ res$cv_table
 ```{r, echo=FALSE}
 pander::pander(res$cv_table)
 ```
+
+## Feature Engineering
+
+Extracting **KNN features**...
