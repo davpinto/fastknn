@@ -14,7 +14,7 @@ fastknnCV(x, y, k = 3:15, method = "dist", folds = 5,
 
 \item{k}{sequence of possible k values to be evaluated (default is [3:15]).}
 
-\item{method}{the probability estimator as in \code{fastknn}.}
+\item{method}{the probability estimator as in \code{\link{fastknn}}.}
 
 \item{folds}{number of folds (default is 5) or an array with fold ids between 
 1 and \code{n} identifying what fold each observation is in. The smallest 
@@ -36,5 +36,35 @@ See \code{\link{classLoss}} for more details.}
 }
 \description{
 Does n-fold cross-validation for \code{fastknn} to find the best k parameter.
+}
+\examples{
+\dontrun{
+library("mlbench")
+library("caTools")
+library("fastknn")
+
+data("Ionosphere")
+
+x <- data.matrix(subset(Ionosphere, select = -Class))
+y <- Ionosphere$Class
+
+set.seed(1024)
+tr.idx <- which(sample.split(Y = y, SplitRatio = 0.7))
+x.tr <- x[tr.idx,]
+x.te <- x[-tr.idx,]
+y.tr <- y[tr.idx]
+y.te <- y[-tr.idx]
+
+set.seed(2048)
+cv.out <- fastknnCV(x = x.tr, y = y.tr, k = c(5,10,15,20), eval.metric="logloss")
+
+cv.out$cv_table
+}
+}
+\author{
+David Pinto.
+}
+\seealso{
+\code{\link{classLoss}}
 }
 

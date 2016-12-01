@@ -12,11 +12,7 @@
 #' @param yte (optional) Factor array with the test labels.
 #' @param k number of neighbors considered.
 #' @param method method used to infer the class membership probabilities of the 
-#' test instances. Choose \code{"dist"} (default) to compute probabilites from 
-#' the inverse of the nearest neighbor distances. This method works as
-#' a shrinkage estimator and provides a better predictive performance in general.
-#' Or you can choose \code{"vote"} to compute probabilities from the frequency 
-#' of the nearest neighbor labels.
+#' test instances. See \code{\link{fastknn}} for more details.
 #' @param dpi a scalar that defines the graph resolution (default = 150). 
 #' It means that \code{dpi^2} data points will be generated from the original 
 #' dataset to draw the decision boundary. So, for large values (>= 300) it may 
@@ -24,7 +20,30 @@
 #'
 #' @return \code{ggplot2} object.
 #'
+#' @author 
+#' David Pinto.
+#'
 #' @export
+#' 
+#' @examples
+#' \dontrun{
+#' library("caTools")
+#' library("fastknn")
+#' 
+#' data("spirals")
+#' 
+#' x <- data.matrix(spirals$x)
+#' y <- spirals$y
+#' 
+#' set.seed(2048)
+#' tr.idx <- which(sample.split(Y = y, SplitRatio = 0.7))
+#' x.tr <- x[tr.idx,]
+#' x.te <- x[-tr.idx,]
+#' y.tr <- y[tr.idx]
+#' y.te <- y[-tr.idx]
+#' 
+#' knnDecision(xtr = x.tr, ytr = y.tr, xte = x.te, yte = y.te, k = 10)
+#' }
 knnDecision <- function(xtr, ytr, xte, yte, k, method = "dist", dpi = 150) {
    
    #### Resample data

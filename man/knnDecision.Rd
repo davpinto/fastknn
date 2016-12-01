@@ -22,11 +22,7 @@ two columns will be considered.}
 \item{k}{number of neighbors considered.}
 
 \item{method}{method used to infer the class membership probabilities of the 
-test instances. Choose \code{"dist"} (default) to compute probabilites from 
-the inverse of the nearest neighbor distances. This method works as
-a shrinkage estimator and provides a better predictive performance in general.
-Or you can choose \code{"vote"} to compute probabilities from the frequency 
-of the nearest neighbor labels.}
+test instances. See \code{\link{fastknn}} for more details.}
 
 \item{dpi}{a scalar that defines the graph resolution (default = 150). 
 It means that \code{dpi^2} data points will be generated from the original 
@@ -38,5 +34,28 @@ take too much time to plot.}
 }
 \description{
 Decision boundary of the \code{fastknn} classifier.
+}
+\examples{
+\dontrun{
+library("caTools")
+library("fastknn")
+
+data("spirals")
+
+x <- data.matrix(spirals$x)
+y <- spirals$y
+
+set.seed(2048)
+tr.idx <- which(sample.split(Y = y, SplitRatio = 0.7))
+x.tr <- x[tr.idx,]
+x.te <- x[-tr.idx,]
+y.tr <- y[tr.idx]
+y.te <- y[-tr.idx]
+
+knnDecision(xtr = x.tr, ytr = y.tr, xte = x.te, yte = y.te, k = 10)
+}
+}
+\author{
+David Pinto.
 }
 

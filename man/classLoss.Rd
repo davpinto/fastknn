@@ -39,4 +39,31 @@ There are four evaluation metrics available sor far:
  loss. It requires the \code{prob} parameter.
 }
 }
+\examples{
+\dontrun{
+library("mlbench")
+library("caTools")
+library("fastknn")
+
+data("Ionosphere")
+
+x <- data.matrix(subset(Ionosphere, select = -Class))
+y <- Ionosphere$Class
+
+set.seed(2048)
+tr.idx <- which(sample.split(Y = y, SplitRatio = 0.7))
+x.tr <- x[tr.idx,]
+x.te <- x[-tr.idx,]
+y.tr <- y[tr.idx]
+y.te <- y[-tr.idx]
+
+knn.out <- fastknn(xtr = x.tr, ytr = y.tr, xte = x.te, k = 10)
+
+classLoss(actual = y.te, predicted = knn.out$class, eval.metric = "overall_error")
+classLoss(actual = y.te, predicted = knn.out$class, prob = knn.out$prob, eval.metric = "logloss")
+}
+}
+\author{
+David Pinto.
+}
 

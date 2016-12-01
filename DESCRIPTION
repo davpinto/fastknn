@@ -7,7 +7,10 @@ Description: A fast KNN learner for binary and multinomial classification
     and to plot beautiful decision boundaries for the classifiers. Moreover, it
     provides estimators for the class membership probabilities based on voting and
     weighted voting. The last one gives more calibrated probabilities in general,
-    and reduces log-loss.
+    and reduces log-loss. If you want to combine KNN with other classifiers, 
+    'fastknn' provides a feature extraction method that makes a nonlinear mapping 
+    from the original features using KNN. Then the new features can be used to 
+    improve the performance of any other classifier of your choice.
 Authors@R: person("David", "Pinto", email = "david@nexer.com.br", role = c("aut", "cre"))
 Depends:
     R (>= 3.3.1)
@@ -22,6 +25,7 @@ Imports:
 Suggests:
     mlbench (>= 2.1-1),
     caTools (>= 1.17.1),
+    glmnet (>= 2.0-5),
     pander,
     testthat,
     knitr,

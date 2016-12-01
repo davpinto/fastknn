@@ -112,7 +112,7 @@ knnDecision(x.tr, y.tr, x.te, y.te, k = 10, method = "dist")
 The **fastknn** provides 2 different estimators to the class membership probabilities:
 
 1. The classical estimator based on the label proportions of the nearest neighbors. This estimator can be thought as of a **voting** rule.
-1. A shrinkage estimator based on the distances from the nearest neighbors, so that those neighbors more close to the test observation have more importante on predicting the class label. This estimator can be thought as of a **weighted voting** rule. In general, it reduces log-loss.
+1. A shrinkage estimator based on the distances from the nearest neighbors, so that those neighbors more close to the test observation have more importance on predicting the class label. This estimator can be thought as of a **weighted voting** rule. In general, it reduces log-loss.
 
 **VOTING**
 

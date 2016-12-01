@@ -55,4 +55,44 @@ new training set, a n-fold CV approach is used to avoid overfitting.
 This procedure is not so simple. But this method provides a easy interface 
 to do it, and is very fast.
 }
+\examples{
+\dontrun{
+library("mlbench")
+library("caTools")
+library("fastknn")
+
+data("Ionosphere")
+
+x <- data.matrix(subset(Ionosphere, select = -Class))
+y <- Ionosphere$Class
+
+# Remove near zero variance columns
+x <- x[, -c(1,2)]
+
+set.seed(2048)
+tr.idx <- which(sample.split(Y = y, SplitRatio = 0.7))
+x.tr <- x[tr.idx,]
+x.te <- x[-tr.idx,]
+y.tr <- y[tr.idx]
+y.te <- y[-tr.idx]
+
+# GLM with original features
+glm <- glmnet(x = x.tr, y = y.tr, family = "binomial", lambda = 0)
+yhat <- drop(predict(glm, x.te, type = "class"))
+yhat <- factor(yhat, levels = levels(y.tr))
+classLoss(actual = y.te, predicted = yhat)
+
+set.seed(2048)
+new.data <- knnExtract(xtr = x.tr, ytr = y.tr, xte = x.te, k = 3)
+
+# GLM with KNN features
+glm <- glmnet(x = new.data$new.tr, y = y.tr, family = "binomial", lambda = 0)
+yhat <- drop(predict(glm, new.data$new.te, type = "class"))
+yhat <- factor(yhat, levels = levels(y.tr))
+classLoss(actual = y.te, predicted = yhat)
+}
+}
+\author{
+David Pinto.
+}
 

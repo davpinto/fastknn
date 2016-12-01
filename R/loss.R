@@ -25,8 +25,35 @@
 #' option is \code{"overall_error"}.
 #'
 #' @return The classification performance measure.
-#'
+#' 
+#' @author 
+#' David Pinto.
+#' 
 #' @export
+#' 
+#' @examples
+#' \dontrun{
+#' library("mlbench")
+#' library("caTools")
+#' library("fastknn")
+#' 
+#' data("Ionosphere")
+#' 
+#' x <- data.matrix(subset(Ionosphere, select = -Class))
+#' y <- Ionosphere$Class
+#' 
+#' set.seed(2048)
+#' tr.idx <- which(sample.split(Y = y, SplitRatio = 0.7))
+#' x.tr <- x[tr.idx,]
+#' x.te <- x[-tr.idx,]
+#' y.tr <- y[tr.idx]
+#' y.te <- y[-tr.idx]
+#' 
+#' knn.out <- fastknn(xtr = x.tr, ytr = y.tr, xte = x.te, k = 10)
+#' 
+#' classLoss(actual = y.te, predicted = knn.out$class, eval.metric = "overall_error")
+#' classLoss(actual = y.te, predicted = knn.out$class, prob = knn.out$prob, eval.metric = "logloss")
+#' }
 classLoss <- function(actual, predicted, prob, eval.metric = "overall_error") {
    loss <- switch(
       eval.metric,

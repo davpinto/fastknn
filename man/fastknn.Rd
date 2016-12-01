@@ -7,7 +7,8 @@
 fastknn(xtr, ytr, xte, k, method = "dist")
 }
 \arguments{
-\item{xtr}{matrix containing the training instances.}
+\item{xtr}{matrix containing the training instances. Rows are observations 
+and columns are variables. Only numeric variables are allowed.}
 
 \item{ytr}{factor array with the training labels.}
 
@@ -32,5 +33,45 @@ of the nearest neighbor labels.}
 \description{
 Fast k-Nearest Neighbor classifier build upon ANN, a high efficient 
 \code{C++} library for nearest neighbor searching.
+}
+\details{
+There are two estimators for the class membership probabilities:
+\enumerate{
+\item \code{metric="vote"}: The classical estimator based on the label 
+proportions of the nearest neighbors. This estimator can be thought as of a 
+\strong{voting} rule.
+\item  \code{metric="dist"}: A shrinkage estimator based on the distances 
+from the nearest neighbors, so that those neighbors more close to the test 
+observation have more importance on predicting the class label. This 
+estimator can be thought as of a \strong{weighted voting} rule. In general, 
+it reduces log-loss.
+}
+}
+\examples{
+\dontrun{
+library("mlbench")
+library("caTools")
+library("fastknn")
+
+data("Ionosphere")
+
+x <- data.matrix(subset(Ionosphere, select = -Class))
+y <- Ionosphere$Class
+
+set.seed(2048)
+tr.idx <- which(sample.split(Y = y, SplitRatio = 0.7))
+x.tr <- x[tr.idx,]
+x.te <- x[-tr.idx,]
+y.tr <- y[tr.idx]
+y.te <- y[-tr.idx]
+
+knn.out <- fastknn(xtr = x.tr, ytr = y.tr, xte = x.te, k = 10)
+
+knn.out$class
+knn.out$prob
+}
+}
+\author{
+David Pinto.
 }
 

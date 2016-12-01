@@ -2,8 +2,21 @@
 #'
 #' Fast k-Nearest Neighbor classifier build upon ANN, a high efficient 
 #' \code{C++} library for nearest neighbor searching.
-#'
-#' @param xtr matrix containing the training instances.
+#' 
+#' There are two estimators for the class membership probabilities:
+#' \enumerate{
+#' \item \code{metric="vote"}: The classical estimator based on the label 
+#' proportions of the nearest neighbors. This estimator can be thought as of a 
+#' \strong{voting} rule.
+#' \item  \code{metric="dist"}: A shrinkage estimator based on the distances 
+#' from the nearest neighbors, so that those neighbors more close to the test 
+#' observation have more importance on predicting the class label. This 
+#' estimator can be thought as of a \strong{weighted voting} rule. In general, 
+#' it reduces log-loss.
+#' }
+#' 
+#' @param xtr matrix containing the training instances. Rows are observations 
+#' and columns are variables. Only numeric variables are allowed.
 #' @param xte matrix containing the test instances.
 #' @param ytr factor array with the training labels.
 #' @param k number of neighbors considered.
@@ -19,8 +32,35 @@
 #'  \item \code{class}: factor array of predicted classes.
 #'  \item \code{prob}: matrix with predicted probabilities.
 #' }
-#'
+#' 
+#' @author 
+#' David Pinto.
+#' 
 #' @export
+#' 
+#' @examples
+#' \dontrun{
+#' library("mlbench")
+#' library("caTools")
+#' library("fastknn")
+#' 
+#' data("Ionosphere")
+#' 
+#' x <- data.matrix(subset(Ionosphere, select = -Class))
+#' y <- Ionosphere$Class
+#' 
+#' set.seed(2048)
+#' tr.idx <- which(sample.split(Y = y, SplitRatio = 0.7))
+#' x.tr <- x[tr.idx,]
+#' x.te <- x[-tr.idx,]
+#' y.tr <- y[tr.idx]
+#' y.te <- y[-tr.idx]
+#' 
+#' knn.out <- fastknn(xtr = x.tr, ytr = y.tr, xte = x.te, k = 10)
+#' 
+#' knn.out$class
+#' knn.out$prob
+#' }
 fastknn <- function(xtr, ytr, xte, k, method = "dist") {
    
    #### Check args
@@ -81,7 +121,7 @@ fastknn <- function(xtr, ytr, xte, k, method = "dist") {
 #' @param x input matrix of dimension \code{nobs x nvars}.
 #' @param y factor array wtih class labels for the \code{x} rows.
 #' @param k sequence of possible k values to be evaluated (default is [3:15]).
-#' @param method the probability estimator as in \code{fastknn}.
+#' @param method the probability estimator as in \code{\link{fastknn}}.
 #' @param folds number of folds (default is 5) or an array with fold ids between 
 #' 1 and \code{n} identifying what fold each observation is in. The smallest 
 #' value allowable is \code{nfolds=3}. The fold assigment given by 
@@ -98,7 +138,37 @@ fastknn <- function(xtr, ytr, xte, k, method = "dist") {
 #'  on each data fold. 
 #' }
 #' 
+#' @author 
+#' David Pinto.
+#' 
+#' @seealso 
+#' \code{\link{classLoss}}
+#' 
 #' @export
+#' 
+#' @examples
+#' \dontrun{
+#' library("mlbench")
+#' library("caTools")
+#' library("fastknn")
+#' 
+#' data("Ionosphere")
+#' 
+#' x <- data.matrix(subset(Ionosphere, select = -Class))
+#' y <- Ionosphere$Class
+#' 
+#' set.seed(1024)
+#' tr.idx <- which(sample.split(Y = y, SplitRatio = 0.7))
+#' x.tr <- x[tr.idx,]
+#' x.te <- x[-tr.idx,]
+#' y.tr <- y[tr.idx]
+#' y.te <- y[-tr.idx]
+#' 
+#' set.seed(2048)
+#' cv.out <- fastknnCV(x = x.tr, y = y.tr, k = c(5,10,15,20), eval.metric="logloss")
+#' 
+#' cv.out$cv_table
+#' }
 fastknnCV <- function(x, y, k = 3:15, method = "dist", folds = 5, 
                       eval.metric = "overall_error") {
    

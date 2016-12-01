@@ -41,7 +41,47 @@
 #'  \item \code{new.te}: \code{matrix} with the new test instances.
 #' }
 #'
+#' @author 
+#' David Pinto.
+#' 
 #' @export
+#' 
+#' @examples
+#' \dontrun{
+#' library("mlbench")
+#' library("caTools")
+#' library("fastknn")
+#' 
+#' data("Ionosphere")
+#' 
+#' x <- data.matrix(subset(Ionosphere, select = -Class))
+#' y <- Ionosphere$Class
+#' 
+#' # Remove near zero variance columns
+#' x <- x[, -c(1,2)]
+#' 
+#' set.seed(2048)
+#' tr.idx <- which(sample.split(Y = y, SplitRatio = 0.7))
+#' x.tr <- x[tr.idx,]
+#' x.te <- x[-tr.idx,]
+#' y.tr <- y[tr.idx]
+#' y.te <- y[-tr.idx]
+#' 
+#' # GLM with original features
+#' glm <- glmnet(x = x.tr, y = y.tr, family = "binomial", lambda = 0)
+#' yhat <- drop(predict(glm, x.te, type = "class"))
+#' yhat <- factor(yhat, levels = levels(y.tr))
+#' classLoss(actual = y.te, predicted = yhat)
+#' 
+#' set.seed(2048)
+#' new.data <- knnExtract(xtr = x.tr, ytr = y.tr, xte = x.te, k = 3)
+#' 
+#' # GLM with KNN features
+#' glm <- glmnet(x = new.data$new.tr, y = y.tr, family = "binomial", lambda = 0)
+#' yhat <- drop(predict(glm, new.data$new.te, type = "class"))
+#' yhat <- factor(yhat, levels = levels(y.tr))
+#' classLoss(actual = y.te, predicted = yhat)
+#' }
 knnExtract <- function(xtr, ytr, xte, k = 5, folds = 5) {
    #### Check and create data folds
    if (length(folds) > 1) {

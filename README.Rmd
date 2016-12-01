@@ -13,7 +13,7 @@ urlcolor: magenta
 > Fast KNN with shrinkage estimator for the class membership probabilities
 
 [![Travis-CI Build Status](https://travis-ci.org/davpinto/fastknn.svg?branch=master)](https://travis-ci.org/davpinto/fastknn)
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/fastknn)](https://cran.r-project.org/package=fastknn)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/fastknn?color=blue)](https://cran.r-project.org/package=fastknn)
 
 ```{r setup, include=FALSE}
 ## rmarkdown::render('README.Rmd', 'github_document')
