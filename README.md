@@ -92,7 +92,7 @@ y.te   <- chess$y[-tr.idx]
 yhat <- fastknn(x.tr, y.tr, x.te, k = 10)
 
 ## Evaluate model on test set
-sprintf("Accuracy: %.2f", 100 * sum(yhat$class == y.te) / length(y.te))
+sprintf("Accuracy: %.2f", 100 * (1 - classLoss(actual = y.te, predicted = yhat$class)))
 ```
 
     ## [1] "Accuracy: 97.67"
@@ -675,4 +675,156 @@ res$cv_table
 Feature Engineering
 -------------------
 
-Extracting **KNN features**...
+The **fastknn** provides a function to do **feature extraction** using KNN. It generates `k * c` new features, where `c` is the number of class labels. The new features are computed from the distances between the observations and their `k` nearest neighbors inside each class. The following example shows that the **KNN features** carry information that can not be extracted from data by a linear learner, like a GLM model:
+
+``` r
+library("mlbench")
+library("caTools")
+library("fastknn")
+library("glmnet")
+
+#### Load data
+data("Ionosphere", package = "mlbench")
+x <- data.matrix(subset(Ionosphere, select = -Class))
+y <- Ionosphere$Class
+
+#### Remove near zero variance columns
+x <- x[, -c(1,2)]
+
+#### Split data
+set.seed(123)
+tr.idx <- which(sample.split(Y = y, SplitRatio = 0.7))
+x.tr <- x[tr.idx,]
+x.te <- x[-tr.idx,]
+y.tr <- y[tr.idx]
+y.te <- y[-tr.idx]
+
+#### GLM with original features
+glm <- glmnet(x = x.tr, y = y.tr, family = "binomial", lambda = 0)
+yhat <- drop(predict(glm, x.te, type = "class"))
+yhat1 <- factor(yhat, levels = levels(y.tr))
+
+#### Generate KNN features
+set.seed(123)
+new.data <- knnExtract(xtr = x.tr, ytr = y.tr, xte = x.te, k = 3)
+
+#### GLM with KNN features
+glm <- glmnet(x = new.data$new.tr, y = y.tr, family = "binomial", lambda = 0)
+yhat <- drop(predict(glm, new.data$new.te, type = "class"))
+yhat2 <- factor(yhat, levels = levels(y.tr))
+
+#### Performance
+sprintf("Accuracy: %.2f", 100 * (1 - classLoss(actual = y.te, predicted = yhat1)))
+sprintf("Accuracy: %.2f", 100 * (1 - classLoss(actual = y.te, predicted = yhat2)))
+```
+
+    ## [1] "Accuracy: 83.81"
+
+    ## [1] "Accuracy: 95.24"
+
+We can see that the **KNN features** improved a lot the classification performance of the GLM model.
+
+The `knnExtract()` function is based on the ideas presented in the
+[winner solution](https://www.kaggle.com/c/otto-group-product-classification-challenge/forums/t/14335/1st-place-winner-solution-gilberto-titericz-stanislav-semenov) of the [Otto Group Product Classification Challenge](https://www.kaggle.com/c/otto-group-product-classification-challenge) on **Kaggle**.
+
+### Understanding the KNN Features
+
+KNN makes a nonlinear mapping of the original space and project it into a linear one, in which the classes are linearly separable.
+
+**Mapping the *chess* dataset**
+
+``` r
+library("caTools")
+library("fastknn")
+library("gridExtra")
+
+## Load data
+data("chess")
+x <- data.matrix(chess$x)
+y <- chess$y
+
+## Split data
+set.seed(123)
+tr.idx <- which(sample.split(Y = y, SplitRatio = 0.7))
+x.tr <- x[tr.idx,]
+x.te <- x[-tr.idx,]
+y.tr <- y[tr.idx]
+y.te <- y[-tr.idx]
+
+## Feature extraction with KNN
+set.seed(123)
+new.data <- knnExtract(x.tr, y.tr, x.te, k = 1)
+```
+
+    ## 
+      |                                                        
+      |                                                  |   0%
+      |                                                        
+      |+++++++++++++++++++++++++                         |  50%
+      |                                                        
+      |++++++++++++++++++++++++++++++++++++++++++++++++++| 100%
+    ## 
+      |                                                        
+      |                                                  |   0%
+      |                                                        
+      |+++++++++++++++++++++++++                         |  50%
+      |                                                        
+      |++++++++++++++++++++++++++++++++++++++++++++++++++| 100%
+
+``` r
+## Decision boundaries
+g1 <- knnDecision(x.tr, y.tr, x.te, y.te, k = 10) +
+   labs(title = "Original Features")
+g2 <- knnDecision(new.data$new.tr, y.tr, new.data$new.te, y.te, k = 10) +
+   labs(title = "KNN Features")
+grid.arrange(g1, g2, ncol = 2)
+```
+
+<img src="README_files/figure-markdown_github/unnamed-chunk-17-1.png" width="\textwidth" style="display: block; margin: auto;" />
+
+**Mapping the *spirals* dataset**
+
+``` r
+## Load data
+data("spirals")
+x <- data.matrix(spirals$x)
+y <- spirals$y
+
+## Split data
+set.seed(123)
+tr.idx <- which(sample.split(Y = y, SplitRatio = 0.7))
+x.tr <- x[tr.idx,]
+x.te <- x[-tr.idx,]
+y.tr <- y[tr.idx]
+y.te <- y[-tr.idx]
+
+## Feature extraction with KNN
+set.seed(123)
+new.data <- knnExtract(x.tr, y.tr, x.te, k = 1)
+```
+
+    ## 
+      |                                                        
+      |                                                  |   0%
+      |                                                        
+      |+++++++++++++++++++++++++                         |  50%
+      |                                                        
+      |++++++++++++++++++++++++++++++++++++++++++++++++++| 100%
+    ## 
+      |                                                        
+      |                                                  |   0%
+      |                                                        
+      |+++++++++++++++++++++++++                         |  50%
+      |                                                        
+      |++++++++++++++++++++++++++++++++++++++++++++++++++| 100%
+
+``` r
+## Decision boundaries
+g1 <- knnDecision(x.tr, y.tr, x.te, y.te, k = 10) +
+   labs(title = "Original Features")
+g2 <- knnDecision(new.data$new.tr, y.tr, new.data$new.te, y.te, k = 10) +
+   labs(title = "KNN Features")
+grid.arrange(g1, g2, ncol = 2)
+```
+
+<img src="README_files/figure-markdown_github/unnamed-chunk-18-1.png" width="\textwidth" style="display: block; margin: auto;" />

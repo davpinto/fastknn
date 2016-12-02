@@ -51,6 +51,7 @@
 #' library("mlbench")
 #' library("caTools")
 #' library("fastknn")
+#' library("glmnet")
 #' 
 #' data("Ionosphere")
 #' 

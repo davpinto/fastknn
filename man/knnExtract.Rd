@@ -60,6 +60,7 @@ to do it, and is very fast.
 library("mlbench")
 library("caTools")
 library("fastknn")
+library("glmnet")
 
 data("Ionosphere")
 
