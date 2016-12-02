@@ -353,7 +353,7 @@ one, in which the classes are linearly separable.
 
 **Mapping the *chess* dataset**
 
-```{r}
+```{r, results='hide'}
 library("caTools")
 library("fastknn")
 library("gridExtra")
@@ -385,7 +385,7 @@ grid.arrange(g1, g2, ncol = 2)
 
 **Mapping the *spirals* dataset**
 
-```{r}
+```{r, results='hide'}
 ## Load data
 data("spirals")
 x <- data.matrix(spirals$x)

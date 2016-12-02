@@ -440,7 +440,7 @@ y.te   <- spirals$y[-tr.idx]
 knnDecision(x.tr, y.tr, x.te, y.te, k = 15)
 ```
 
-<img src="README_files/figure-markdown_github/unnamed-chunk-7-1.png" width="\textwidth" style="display: block; margin: auto;" />
+<img src="README_files/figure-markdown_github/unnamed-chunk-11-1.png" width="\textwidth" style="display: block; margin: auto;" />
 
 ### Multi-class Problem
 
@@ -460,7 +460,7 @@ y.te   <- multi_spirals$y[-tr.idx]
 knnDecision(x.tr, y.tr, x.te, y.te, k = 15)
 ```
 
-<img src="README_files/figure-markdown_github/unnamed-chunk-8-1.png" width="\textwidth" style="display: block; margin: auto;" />
+<img src="README_files/figure-markdown_github/unnamed-chunk-12-1.png" width="\textwidth" style="display: block; margin: auto;" />
 
 Performance Test
 ----------------
@@ -540,38 +540,38 @@ res
 <tr class="odd">
 <td align="center">knn</td>
 <td align="center">10000</td>
-<td align="center">4.07</td>
-<td align="center">76.33</td>
+<td align="center">1.203</td>
+<td align="center">73.38</td>
 </tr>
 <tr class="even">
 <td align="center">fastknn</td>
 <td align="center">10000</td>
-<td align="center">0.389</td>
-<td align="center">93.11</td>
+<td align="center">0.136</td>
+<td align="center">77.04</td>
 </tr>
 <tr class="odd">
 <td align="center">knn</td>
 <td align="center">15000</td>
-<td align="center">8.934</td>
-<td align="center">77.97</td>
+<td align="center">2.642</td>
+<td align="center">73.71</td>
 </tr>
 <tr class="even">
 <td align="center">fastknn</td>
 <td align="center">15000</td>
-<td align="center">0.302</td>
-<td align="center">93.05</td>
+<td align="center">0.164</td>
+<td align="center">76.82</td>
 </tr>
 <tr class="odd">
 <td align="center">knn</td>
 <td align="center">20000</td>
-<td align="center">16.02</td>
-<td align="center">79.74</td>
+<td align="center">5.6</td>
+<td align="center">76.38</td>
 </tr>
 <tr class="even">
 <td align="center">fastknn</td>
 <td align="center">20000</td>
-<td align="center">0.356</td>
-<td align="center">94.11</td>
+<td align="center">0.191</td>
+<td align="center">80.37</td>
 </tr>
 </tbody>
 </table>
@@ -618,12 +618,12 @@ res$cv_table
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center">0.5832</td>
-<td align="center">0.5771</td>
-<td align="center">0.6116</td>
-<td align="center">0.5601</td>
-<td align="center">0.5606</td>
-<td align="center">0.5785</td>
+<td align="center">0.6081</td>
+<td align="center">0.5524</td>
+<td align="center">0.5643</td>
+<td align="center">0.5682</td>
+<td align="center">0.6528</td>
+<td align="center">0.5892</td>
 <td align="center">10</td>
 </tr>
 </tbody>
@@ -661,12 +661,12 @@ res$cv_table
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center">0.5444</td>
-<td align="center">0.5499</td>
-<td align="center">0.5077</td>
-<td align="center">0.4804</td>
-<td align="center">0.5885</td>
-<td align="center">0.5342</td>
+<td align="center">0.5586</td>
+<td align="center">0.5039</td>
+<td align="center">0.5176</td>
+<td align="center">0.5181</td>
+<td align="center">0.604</td>
+<td align="center">0.5404</td>
 <td align="center">10</td>
 </tr>
 </tbody>
@@ -754,24 +754,7 @@ y.te <- y[-tr.idx]
 ## Feature extraction with KNN
 set.seed(123)
 new.data <- knnExtract(x.tr, y.tr, x.te, k = 1)
-```
 
-    ## 
-      |                                                        
-      |                                                  |   0%
-      |                                                        
-      |+++++++++++++++++++++++++                         |  50%
-      |                                                        
-      |++++++++++++++++++++++++++++++++++++++++++++++++++| 100%
-    ## 
-      |                                                        
-      |                                                  |   0%
-      |                                                        
-      |+++++++++++++++++++++++++                         |  50%
-      |                                                        
-      |++++++++++++++++++++++++++++++++++++++++++++++++++| 100%
-
-``` r
 ## Decision boundaries
 g1 <- knnDecision(x.tr, y.tr, x.te, y.te, k = 10) +
    labs(title = "Original Features")
@@ -780,7 +763,7 @@ g2 <- knnDecision(new.data$new.tr, y.tr, new.data$new.te, y.te, k = 10) +
 grid.arrange(g1, g2, ncol = 2)
 ```
 
-<img src="README_files/figure-markdown_github/unnamed-chunk-17-1.png" width="\textwidth" style="display: block; margin: auto;" />
+<img src="README_files/figure-markdown_github/unnamed-chunk-21-1.png" width="\textwidth" style="display: block; margin: auto;" />
 
 **Mapping the *spirals* dataset**
 
@@ -801,24 +784,7 @@ y.te <- y[-tr.idx]
 ## Feature extraction with KNN
 set.seed(123)
 new.data <- knnExtract(x.tr, y.tr, x.te, k = 1)
-```
 
-    ## 
-      |                                                        
-      |                                                  |   0%
-      |                                                        
-      |+++++++++++++++++++++++++                         |  50%
-      |                                                        
-      |++++++++++++++++++++++++++++++++++++++++++++++++++| 100%
-    ## 
-      |                                                        
-      |                                                  |   0%
-      |                                                        
-      |+++++++++++++++++++++++++                         |  50%
-      |                                                        
-      |++++++++++++++++++++++++++++++++++++++++++++++++++| 100%
-
-``` r
 ## Decision boundaries
 g1 <- knnDecision(x.tr, y.tr, x.te, y.te, k = 10) +
    labs(title = "Original Features")
@@ -827,4 +793,4 @@ g2 <- knnDecision(new.data$new.tr, y.tr, new.data$new.te, y.te, k = 10) +
 grid.arrange(g1, g2, ncol = 2)
 ```
 
-<img src="README_files/figure-markdown_github/unnamed-chunk-18-1.png" width="\textwidth" style="display: block; margin: auto;" />
+<img src="README_files/figure-markdown_github/unnamed-chunk-22-1.png" width="\textwidth" style="display: block; margin: auto;" />
