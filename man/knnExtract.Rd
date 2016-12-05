@@ -4,7 +4,7 @@
 \alias{knnExtract}
 \title{Nearest Neighbors Features}
 \usage{
-knnExtract(xtr, ytr, xte, k = 5, folds = 5)
+knnExtract(xtr, ytr, xte, k = 5, normalize = NULL, folds = 5)
 }
 \arguments{
 \item{xtr}{matrix containing the training instances.}
@@ -16,6 +16,8 @@ knnExtract(xtr, ytr, xte, k = 5, folds = 5)
 \item{k}{number of neighbors considered (default is 5). This choice is 
 directly related to the number of new features. So, be careful with it. A 
 large \code{k} may increase a lot the computing time for big datasets.}
+
+\item{normalize}{variable scaler as in \code{\link{fastknn}}.}
 
 \item{folds}{number of folds (default is 5) or an array with fold ids between 
 1 and \code{n} identifying what fold each observation is in. The smallest 

@@ -31,6 +31,7 @@
 #' @param k number of neighbors considered (default is 5). This choice is 
 #' directly related to the number of new features. So, be careful with it. A 
 #' large \code{k} may increase a lot the computing time for big datasets.
+#' @param normalize variable scaler as in \code{\link{fastknn}}.
 #' @param folds number of folds (default is 5) or an array with fold ids between 
 #' 1 and \code{n} identifying what fold each observation is in. The smallest 
 #' value allowable is \code{nfolds=3}.
@@ -83,7 +84,7 @@
 #' yhat <- factor(yhat, levels = levels(y.tr))
 #' classLoss(actual = y.te, predicted = yhat)
 #' }
-knnExtract <- function(xtr, ytr, xte, k = 5, folds = 5) {
+knnExtract <- function(xtr, ytr, xte, k = 5, normalize = NULL, folds = 5) {
    #### Check and create data folds
    if (length(folds) > 1) {
       if (length(unique(folds)) < 3) {
@@ -100,9 +101,18 @@ knnExtract <- function(xtr, ytr, xte, k = 5, folds = 5) {
       folds <- createCVFolds(ytr, n = folds)
    }
    
-   ### Transform fold ids to factor
+   #### Transform fold ids to factor
    folds <- factor(paste('fold', folds, sep = '_'), 
                    levels = paste('fold', sort(unique(folds)), sep = '_'))
+   
+   #### Normalize data
+   if (!is.null(normalize)) {
+      norm.out <- scaleData(xtr, xte, type = normalize)
+      xtr <- norm.out$new.tr
+      xte <- norm.out$new.te
+      rm("norm.out")
+      gc()
+   }
    
    #### Extract features from training set
    ## n-fold CV is used to avoid overfitting

@@ -74,6 +74,7 @@ The base of `fastknn` is the `RANN` package, but other packages are required to 
 * `magrittr` to use the pipe operator `%>%`,
 * `pbapply` to show a progress bar during cross-validation,
 * `Metrics` to measure classification performance,
+* `matrixStats` for fast matrix column-wise and row-wise statistics,
 * `ggplot2` to plot classification decision boundaries,
 * `viridis` for modern color palletes.
 

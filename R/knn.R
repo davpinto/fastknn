@@ -26,6 +26,22 @@
 #' a shrinkage estimator and provides a better predictive performance in general.
 #' Or you can choose \code{"vote"} to compute probabilities from the frequency 
 #' of the nearest neighbor labels.
+#' @param normalize variable normalization to be applied prior to searching the 
+#' nearest neighbors. Default is \code{normalize=NULL}. Normalization is 
+#' recommended if variables are not in the same units. It can be one of the 
+#' following:
+#' \itemize{
+#'  \item{normalize="std"}: standardize variables by removing the mean and 
+#'  scaling to unit variance. 
+#'  \item{normalize="minmax"}: transforms variables by scaling each one between 
+#'  0 and 1.
+#'  \item{normalize="maxabs"}: scales each variable by its maximum absolute 
+#'  value. This is the best choice for sparse data because it does not 
+#'  shift/center the variables.
+#'  \item{normalize="robust"}: scales variables using statistics that are 
+#'  robust to outliers. It removes the median and scales by the interquartile 
+#'  range (IQR).
+#' }
 #'
 #' @return \code{list} with predictions for the test set:
 #' \itemize{
@@ -61,7 +77,7 @@
 #' knn.out$class
 #' knn.out$prob
 #' }
-fastknn <- function(xtr, ytr, xte, k, method = "dist") {
+fastknn <- function(xtr, ytr, xte, k, method = "dist", normalize = NULL) {
    
    #### Check args
    stopifnot(is.matrix(xtr))
@@ -75,6 +91,18 @@ fastknn <- function(xtr, ytr, xte, k, method = "dist") {
    }
    if (k > nrow(xtr)) {
       stop("The number of nearest neighbors cannot be greater than the number of training instances.")
+   }
+   if (k < 1) {
+      stop("k must be at least 1.")
+   }
+   
+   #### Normalize data
+   if (!is.null(normalize)) {
+      norm.out <- scaleData(xtr, xte, type = normalize)
+      xtr <- norm.out$new.tr
+      xte <- norm.out$new.te
+      rm("norm.out")
+      gc()
    }
    
    #### Find nearest neighbors
@@ -122,6 +150,7 @@ fastknn <- function(xtr, ytr, xte, k, method = "dist") {
 #' @param y factor array wtih class labels for the \code{x} rows.
 #' @param k sequence of possible k values to be evaluated (default is [3:15]).
 #' @param method the probability estimator as in \code{\link{fastknn}}.
+#' @param normalize variable scaler as in \code{\link{fastknn}}.
 #' @param folds number of folds (default is 5) or an array with fold ids between 
 #' 1 and \code{n} identifying what fold each observation is in. The smallest 
 #' value allowable is \code{nfolds=3}. The fold assigment given by 
@@ -169,8 +198,8 @@ fastknn <- function(xtr, ytr, xte, k, method = "dist") {
 #' 
 #' cv.out$cv_table
 #' }
-fastknnCV <- function(x, y, k = 3:15, method = "dist", folds = 5, 
-                      eval.metric = "overall_error") {
+fastknnCV <- function(x, y, k = 3:15, method = "dist", normalize = NULL, 
+                      folds = 5, eval.metric = "overall_error") {
    
    #### Check and create data folds
    if (length(folds) > 1) {
@@ -191,7 +220,8 @@ fastknnCV <- function(x, y, k = 3:15, method = "dist", folds = 5,
    cv.results <- pbapply::pblapply(k, function(k, x, y, folds) {
       sapply(levels(folds), function(fold.id) {
          te.idx <- which(folds == fold.id)
-         y.hat <- fastknn(x[-te.idx,], y[-te.idx], x[te.idx,], k, method)
+         y.hat <- fastknn(x[-te.idx,], y[-te.idx], x[te.idx,], k, method, 
+                          normalize)
          classLoss(actual = y[te.idx], predicted = y.hat$class, 
                    prob = y.hat$prob, eval.metric = eval.metric)
       }, simplify = FALSE, USE.NAMES = TRUE)
@@ -211,6 +241,43 @@ fastknnCV <- function(x, y, k = 3:15, method = "dist", folds = 5,
       best_k = k[best.idx],
       best_eval = cv.results$mean[best.idx],
       cv_table = cv.results
+   ))
+}
+
+#### Scale features
+scaleData <- function(xtr, xte, type = "maxabs") {
+   stopifnot(type %in% c("std", "minmax", "maxabs", "robust"))
+   
+   ## Compute column center and scale
+   switch(
+      type,
+      std = { # Data standardization
+         x.center <- colMeans(xtr)
+         x.scaler <- matrixStats::colSds(xtr)
+      },
+      minmax = { # Normalize between 0 and 1
+         x.center <- matrixStats::colMins(xtr)
+         x.scaler <- matrixStats::colMaxs(xtr) - x.center
+      },
+      maxabs = { # Set max value as 1 and keep sparsity
+         x.center <- rep(0, ncol(xtr))
+         x.scaler <- matrixStats::colMaxs(abs(xtr))
+      },
+      robust = { # Robust to outliers
+         x.center <- matrixStats::colMedians(xtr)
+         x.scaler <- matrixStats::colIQRs(xtr)
+      }
+   )
+   
+   ## Apply normalization
+   xtr <- sweep(xtr, 2, x.center, "-")
+   xtr <- sweep(xtr, 2, x.scaler, "/")
+   xte <- sweep(xte, 2, x.center, "-")
+   xte <- sweep(xte, 2, x.scaler, "/")
+   
+   return(list(
+      new.tr = xtr,
+      new.te = xte
    ))
 }
 

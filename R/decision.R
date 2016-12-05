@@ -1,6 +1,6 @@
 #' Classification Decision Boundary
 #'
-#' Decision boundary of the \code{fastknn} classifier.
+#' Decision boundary of the \code{\link{fastknn}} classifier.
 #'
 #' @param xtr matrix containing the training instances. If \code{xtr} is not a 
 #' bidimensional matrix only the first two columns will be considered.
@@ -13,6 +13,7 @@
 #' @param k number of neighbors considered.
 #' @param method method used to infer the class membership probabilities of the 
 #' test instances. See \code{\link{fastknn}} for more details.
+#' @param normalize variable scaler as in \code{\link{fastknn}}.
 #' @param dpi a scalar that defines the graph resolution (default = 150). 
 #' It means that \code{dpi^2} data points will be generated from the original 
 #' dataset to draw the decision boundary. So, for large values (>= 300) it may 
@@ -44,7 +45,8 @@
 #' 
 #' knnDecision(xtr = x.tr, ytr = y.tr, xte = x.te, yte = y.te, k = 10)
 #' }
-knnDecision <- function(xtr, ytr, xte, yte, k, method = "dist", dpi = 150) {
+knnDecision <- function(xtr, ytr, xte, yte, k, method = "dist", 
+                        normalize = NULL, dpi = 150) {
    
    #### Resample data
    x1 <- seq(
@@ -68,7 +70,7 @@ knnDecision <- function(xtr, ytr, xte, yte, k, method = "dist", dpi = 150) {
    } else {
       points.df <- data.frame(x1 = xte[,1], x2 = xte[,2], label = yte)
    }
-   y.hat <- fastknn(xtr[, 1:2, drop = FALSE], ytr, x.new, k, method)
+   y.hat <- fastknn(xtr[, 1:2, drop = FALSE], ytr, x.new, k, method, normalize)
    if (nlevels(ytr) > 2) {
       decision.df <- data.frame(x1 = x.new[,1], x2 = x.new[,2], 
                                 y = y.hat$class, 

@@ -4,7 +4,7 @@
 \alias{fastknn}
 \title{Fast KNN Classifier}
 \usage{
-fastknn(xtr, ytr, xte, k, method = "dist")
+fastknn(xtr, ytr, xte, k, method = "dist", normalize = NULL)
 }
 \arguments{
 \item{xtr}{matrix containing the training instances. Rows are observations 
@@ -22,6 +22,23 @@ the inverse of the nearest neighbor distances. This method works as
 a shrinkage estimator and provides a better predictive performance in general.
 Or you can choose \code{"vote"} to compute probabilities from the frequency 
 of the nearest neighbor labels.}
+
+\item{normalize}{variable normalization to be applied prior to searching the 
+nearest neighbors. Default is \code{normalize=NULL}. Normalization is 
+recommended if variables are not in the same units. It can be one of the 
+following:
+\itemize{
+ \item{normalize="std"}: standardize variables by removing the mean and 
+ scaling to unit variance. 
+ \item{normalize="minmax"}: transforms variables by scaling each one between 
+ 0 and 1.
+ \item{normalize="maxabs"}: scales each variable by its maximum absolute 
+ value. This is the best choice for sparse data because it does not 
+ shift/center the variables.
+ \item{normalize="robust"}: scales variables using statistics that are 
+ robust to outliers. It removes the median and scales by the interquartile 
+ range (IQR).
+}}
 }
 \value{
 \code{list} with predictions for the test set:

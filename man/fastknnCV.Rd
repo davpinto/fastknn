@@ -4,7 +4,7 @@
 \alias{fastknnCV}
 \title{Cross-Validation for fastknn}
 \usage{
-fastknnCV(x, y, k = 3:15, method = "dist", folds = 5,
+fastknnCV(x, y, k = 3:15, method = "dist", normalize = NULL, folds = 5,
   eval.metric = "overall_error")
 }
 \arguments{
@@ -15,6 +15,8 @@ fastknnCV(x, y, k = 3:15, method = "dist", folds = 5,
 \item{k}{sequence of possible k values to be evaluated (default is [3:15]).}
 
 \item{method}{the probability estimator as in \code{\link{fastknn}}.}
+
+\item{normalize}{variable scaler as in \code{\link{fastknn}}.}
 
 \item{folds}{number of folds (default is 5) or an array with fold ids between 
 1 and \code{n} identifying what fold each observation is in. The smallest 

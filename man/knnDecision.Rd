@@ -4,7 +4,8 @@
 \alias{knnDecision}
 \title{Classification Decision Boundary}
 \usage{
-knnDecision(xtr, ytr, xte, yte, k, method = "dist", dpi = 150)
+knnDecision(xtr, ytr, xte, yte, k, method = "dist", normalize = NULL,
+  dpi = 150)
 }
 \arguments{
 \item{xtr}{matrix containing the training instances. If \code{xtr} is not a 
@@ -24,6 +25,8 @@ two columns will be considered.}
 \item{method}{method used to infer the class membership probabilities of the 
 test instances. See \code{\link{fastknn}} for more details.}
 
+\item{normalize}{variable scaler as in \code{\link{fastknn}}.}
+
 \item{dpi}{a scalar that defines the graph resolution (default = 150). 
 It means that \code{dpi^2} data points will be generated from the original 
 dataset to draw the decision boundary. So, for large values (>= 300) it may 
@@ -33,7 +36,7 @@ take too much time to plot.}
 \code{ggplot2} object.
 }
 \description{
-Decision boundary of the \code{fastknn} classifier.
+Decision boundary of the \code{\link{fastknn}} classifier.
 }
 \examples{
 \dontrun{
