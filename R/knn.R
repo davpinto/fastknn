@@ -5,10 +5,10 @@
 #' 
 #' There are two estimators for the class membership probabilities:
 #' \enumerate{
-#' \item \code{metric="vote"}: The classical estimator based on the label 
+#' \item \code{method="vote"}: The classical estimator based on the label 
 #' proportions of the nearest neighbors. This estimator can be thought as of a 
 #' \strong{voting} rule.
-#' \item  \code{metric="dist"}: A shrinkage estimator based on the distances 
+#' \item  \code{method="dist"}: A shrinkage estimator based on the distances 
 #' from the nearest neighbors, so that those neighbors more close to the test 
 #' observation have more importance on predicting the class label. This 
 #' estimator can be thought as of a \strong{weighted voting} rule. In general, 
