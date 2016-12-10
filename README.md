@@ -1,14 +1,6 @@
 Fast k-Nearest Neighbor Classifier
 ================
 
--   [Why `fastknn`?](#why-fastknn)
--   [Fast Nearest Neighbor Searching](#fast-nearest-neighbor-searching)
--   [The FastKNN Classifier](#the-fastknn-classifier)
--   [Find the Best k](#find-the-best-k)
--   [Plot Classification Decision Boundary](#plot-classification-decision-boundary)
--   [Performance Test](#performance-test)
--   [Feature Engineering](#feature-engineering)
-
 > Fast KNN with shrinkage estimator for the class membership probabilities
 
 [![Travis-CI Build Status](https://travis-ci.org/davpinto/fastknn.svg?branch=master)](https://travis-ci.org/davpinto/fastknn) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/fastknn?color=blue)](https://cran.r-project.org/package=fastknn)
@@ -38,7 +30,7 @@ The `fastknn` method implements a k-Nearest Neighbor (KNN) classifier based on t
 The FastKNN Classifier
 ----------------------
 
-The `fastknn` was developed to deal with very large datasets (&gt; 100k rows) and is ideal to [Kaggle](https://www.kaggle.com) competitions. It can be about 50x faster then the popular `knn` method from the `R` package [class](https://cran.r-project.org/web/packages/class), for large datasets. Moreover, `fastknn` provides a shrinkage estimator to the class membership probabilities, based on the inverse distances of the nearest neighbors (**download** the `README.html` file to see equations):
+The `fastknn` was developed to deal with very large datasets (&gt; 100k rows) and is ideal to [Kaggle](https://www.kaggle.com) competitions. It can be about 50x faster then the popular `knn` method from the `R` package [class](https://cran.r-project.org/web/packages/class), for large datasets. Moreover, `fastknn` provides a shrinkage estimator to the class membership probabilities, based on the inverse distances of the nearest neighbors (see the equations on [fastknn website](https://davpinto.github.io/fastknn/)):
 
 $$
 P(x\_i \\in y\_j) = \\displaystyle\\frac{\\displaystyle\\sum\\limits\_{k=1}^K \\left( \\frac{1}{d\_{ik}}\\cdot(n\_{ik} \\in y\_j) \\right)}{\\displaystyle\\sum\\limits\_{k=1}^K \\left( \\frac{1}{d\_{ik}} \\right)}
@@ -65,6 +57,7 @@ The base of `fastknn` is the `RANN` package, but other packages are required to 
 -   `magrittr` to use the pipe operator `%>%`,
 -   `pbapply` to show a progress bar during cross-validation,
 -   `Metrics` to measure classification performance,
+-   `matrixStats` for fast matrix column-wise and row-wise statistics,
 -   `ggplot2` to plot classification decision boundaries,
 -   `viridis` for modern color palletes.
 
@@ -440,7 +433,7 @@ y.te   <- spirals$y[-tr.idx]
 knnDecision(x.tr, y.tr, x.te, y.te, k = 15)
 ```
 
-<img src="README_files/figure-markdown_github/unnamed-chunk-11-1.png" width="\textwidth" style="display: block; margin: auto;" />
+<img src="README_files/figure-markdown_github/unnamed-chunk-7-1.png" width="\textwidth" style="display: block; margin: auto;" />
 
 ### Multi-class Problem
 
@@ -460,7 +453,7 @@ y.te   <- multi_spirals$y[-tr.idx]
 knnDecision(x.tr, y.tr, x.te, y.te, k = 15)
 ```
 
-<img src="README_files/figure-markdown_github/unnamed-chunk-12-1.png" width="\textwidth" style="display: block; margin: auto;" />
+<img src="README_files/figure-markdown_github/unnamed-chunk-8-1.png" width="\textwidth" style="display: block; margin: auto;" />
 
 Performance Test
 ----------------
@@ -540,37 +533,37 @@ res
 <tr class="odd">
 <td align="center">knn</td>
 <td align="center">10000</td>
-<td align="center">1.203</td>
+<td align="center">1.252</td>
 <td align="center">73.38</td>
 </tr>
 <tr class="even">
 <td align="center">fastknn</td>
 <td align="center">10000</td>
-<td align="center">0.136</td>
+<td align="center">0.092</td>
 <td align="center">77.04</td>
 </tr>
 <tr class="odd">
 <td align="center">knn</td>
 <td align="center">15000</td>
-<td align="center">2.642</td>
+<td align="center">2.848</td>
 <td align="center">73.71</td>
 </tr>
 <tr class="even">
 <td align="center">fastknn</td>
 <td align="center">15000</td>
-<td align="center">0.164</td>
+<td align="center">0.119</td>
 <td align="center">76.82</td>
 </tr>
 <tr class="odd">
 <td align="center">knn</td>
 <td align="center">20000</td>
-<td align="center">5.6</td>
+<td align="center">5.957</td>
 <td align="center">76.38</td>
 </tr>
 <tr class="even">
 <td align="center">fastknn</td>
 <td align="center">20000</td>
-<td align="center">0.191</td>
+<td align="center">0.147</td>
 <td align="center">80.37</td>
 </tr>
 </tbody>
@@ -736,6 +729,7 @@ KNN makes a nonlinear mapping of the original space and project it into a linear
 ``` r
 library("caTools")
 library("fastknn")
+library("ggplot2")
 library("gridExtra")
 
 ## Load data
@@ -763,7 +757,7 @@ g2 <- knnDecision(new.data$new.tr, y.tr, new.data$new.te, y.te, k = 10) +
 grid.arrange(g1, g2, ncol = 2)
 ```
 
-<img src="README_files/figure-markdown_github/unnamed-chunk-21-1.png" width="\textwidth" style="display: block; margin: auto;" />
+<img src="README_files/figure-markdown_github/unnamed-chunk-17-1.png" width="\textwidth" style="display: block; margin: auto;" />
 
 **Mapping the *spirals* dataset**
 
@@ -793,4 +787,4 @@ g2 <- knnDecision(new.data$new.tr, y.tr, new.data$new.te, y.te, k = 10) +
 grid.arrange(g1, g2, ncol = 2)
 ```
 
-<img src="README_files/figure-markdown_github/unnamed-chunk-22-1.png" width="\textwidth" style="display: block; margin: auto;" />
+<img src="README_files/figure-markdown_github/unnamed-chunk-18-1.png" width="\textwidth" style="display: block; margin: auto;" />

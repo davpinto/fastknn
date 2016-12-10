@@ -4,9 +4,7 @@ output:
    html_document: 
       toc: true
       toc_depth: 2
-   github_document: 
-      toc: true
-      toc_depth: 2
+   github_document: default
 urlcolor: magenta
 ---
 
@@ -17,7 +15,7 @@ urlcolor: magenta
 
 ```{r setup, include=FALSE}
 ## rmarkdown::render('README.Rmd', 'github_document')
-## rmarkdown::render('README.Rmd', 'html_document')
+## rmarkdown::render(input = 'README.Rmd', output_format = 'html_document', output_file = "index.html", output_dir = "./docs")
 
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, 
                       out.width = "\\textwidth", fig.align = "center", 
@@ -47,7 +45,7 @@ The `fastknn` method implements a k-Nearest Neighbor (KNN) classifier based on t
 
 ## The FastKNN Classifier
 
-The `fastknn` was developed to deal with very large datasets (> 100k rows) and is ideal to [Kaggle](https://www.kaggle.com) competitions. It can be about 50x faster then the popular `knn` method from the `R` package [class](https://cran.r-project.org/web/packages/class), for large datasets. Moreover, `fastknn` provides a shrinkage estimator to the class membership probabilities, based on the inverse distances of the nearest neighbors (**download** the `README.html` file to see equations):
+The `fastknn` was developed to deal with very large datasets (> 100k rows) and is ideal to [Kaggle](https://www.kaggle.com) competitions. It can be about 50x faster then the popular `knn` method from the `R` package [class](https://cran.r-project.org/web/packages/class), for large datasets. Moreover, `fastknn` provides a shrinkage estimator to the class membership probabilities, based on the inverse distances of the nearest neighbors (see the equations on [fastknn website](https://davpinto.github.io/fastknn/)):
 
 $$
 P(x_i \in y_j) = \displaystyle\frac{\displaystyle\sum\limits_{k=1}^K \left( \frac{1}{d_{ik}}\cdot(n_{ik} \in y_j) \right)}{\displaystyle\sum\limits_{k=1}^K \left( \frac{1}{d_{ik}} \right)}
@@ -357,6 +355,7 @@ one, in which the classes are linearly separable.
 ```{r, results='hide'}
 library("caTools")
 library("fastknn")
+library("ggplot2")
 library("gridExtra")
 
 ## Load data
