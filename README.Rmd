@@ -18,7 +18,7 @@ urlcolor: magenta
 ## rmarkdown::render(input = 'README.Rmd', output_format = 'html_document', output_file = "index.html", output_dir = "./docs")
 
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, 
-                      out.width = "\\textwidth", fig.align = "center", 
+                      fig.align = "center", fig.width = 8,
                       fig.height = 4, dpi = 120, cache = TRUE)
 ```
 
@@ -259,7 +259,7 @@ We compared the `voting` estimator with the `weighted voting` estimator:
 ```{r, results='hide'}
 #### Extract input variables and response variable
 x <- as.matrix(covertype[, -55])
-y <- covertype$Target
+y <- as.factor(covertype$Target)
 
 #### 5-fold cross-validation
 set.seed(123)

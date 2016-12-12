@@ -433,7 +433,7 @@ y.te   <- spirals$y[-tr.idx]
 knnDecision(x.tr, y.tr, x.te, y.te, k = 15)
 ```
 
-<img src="README_files/figure-markdown_github/unnamed-chunk-7-1.png" width="\textwidth" style="display: block; margin: auto;" />
+<img src="README_files/figure-markdown_github/unnamed-chunk-7-1.png" style="display: block; margin: auto;" />
 
 ### Multi-class Problem
 
@@ -453,7 +453,7 @@ y.te   <- multi_spirals$y[-tr.idx]
 knnDecision(x.tr, y.tr, x.te, y.te, k = 15)
 ```
 
-<img src="README_files/figure-markdown_github/unnamed-chunk-8-1.png" width="\textwidth" style="display: block; margin: auto;" />
+<img src="README_files/figure-markdown_github/unnamed-chunk-8-1.png" style="display: block; margin: auto;" />
 
 Performance Test
 ----------------
@@ -533,37 +533,37 @@ res
 <tr class="odd">
 <td align="center">knn</td>
 <td align="center">10000</td>
-<td align="center">1.252</td>
+<td align="center">1.232</td>
 <td align="center">73.38</td>
 </tr>
 <tr class="even">
 <td align="center">fastknn</td>
 <td align="center">10000</td>
-<td align="center">0.092</td>
+<td align="center">0.138</td>
 <td align="center">77.04</td>
 </tr>
 <tr class="odd">
 <td align="center">knn</td>
 <td align="center">15000</td>
-<td align="center">2.848</td>
+<td align="center">2.834</td>
 <td align="center">73.71</td>
 </tr>
 <tr class="even">
 <td align="center">fastknn</td>
 <td align="center">15000</td>
-<td align="center">0.119</td>
+<td align="center">0.167</td>
 <td align="center">76.82</td>
 </tr>
 <tr class="odd">
 <td align="center">knn</td>
 <td align="center">20000</td>
-<td align="center">5.957</td>
+<td align="center">6.068</td>
 <td align="center">76.38</td>
 </tr>
 <tr class="even">
 <td align="center">fastknn</td>
 <td align="center">20000</td>
-<td align="center">0.147</td>
+<td align="center">0.193</td>
 <td align="center">80.37</td>
 </tr>
 </tbody>
@@ -580,7 +580,7 @@ We compared the `voting` estimator with the `weighted voting` estimator:
 ``` r
 #### Extract input variables and response variable
 x <- as.matrix(covertype[, -55])
-y <- covertype$Target
+y <- as.factor(covertype$Target)
 
 #### 5-fold cross-validation
 set.seed(123)
@@ -757,7 +757,7 @@ g2 <- knnDecision(new.data$new.tr, y.tr, new.data$new.te, y.te, k = 10) +
 grid.arrange(g1, g2, ncol = 2)
 ```
 
-<img src="README_files/figure-markdown_github/unnamed-chunk-17-1.png" width="\textwidth" style="display: block; margin: auto;" />
+<img src="README_files/figure-markdown_github/unnamed-chunk-17-1.png" style="display: block; margin: auto;" />
 
 **Mapping the *spirals* dataset**
 
@@ -787,4 +787,4 @@ g2 <- knnDecision(new.data$new.tr, y.tr, new.data$new.te, y.te, k = 10) +
 grid.arrange(g1, g2, ncol = 2)
 ```
 
-<img src="README_files/figure-markdown_github/unnamed-chunk-18-1.png" width="\textwidth" style="display: block; margin: auto;" />
+<img src="README_files/figure-markdown_github/unnamed-chunk-18-1.png" style="display: block; margin: auto;" />
