@@ -1,12 +1,12 @@
 Package: fastknn
-Version: 0.1.0
+Version: 0.9.0
 Title: Build Fast k-Nearest Neighbor Classifiers
 Description: A fast KNN learner for binary and multinomial classification
     problems, build upon the ANN library. It has been developed to deal with very
     large datasets (> 100k rows). The 'fastknn' makes it easy to find the best 'k'
     and to plot beautiful decision boundaries for the classifiers. Moreover, it
     provides estimators for the class membership probabilities based on voting and
-    weighted voting. The last one gives more calibrated probabilities in general,
+    weighted voting rules. The last one gives more calibrated probabilities in general,
     and reduces log-loss. If you want to combine KNN with other classifiers, 
     'fastknn' provides a feature extraction method that makes a nonlinear mapping 
     from the original features using KNN. Then the new features can be used to 
