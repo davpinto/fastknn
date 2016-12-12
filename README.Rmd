@@ -1,10 +1,10 @@
 ---
 title: "Fast k-Nearest Neighbor Classifier"
 output:
+   github_document: default
    html_document: 
       toc: true
       toc_depth: 2
-   github_document: default
 urlcolor: magenta
 ---
 
@@ -108,8 +108,8 @@ sprintf("Accuracy: %.2f", 100 * (1 - classLoss(actual = y.te, predicted = yhat$c
 The `fastknn` provides a interface to select the best `k` using n-fold cross-validation. There are 4 possible **loss functions**:
 
 * Overall classification error rate: `eval.metric = "overall_error"`
-* Mean in-class classification error rate: `eval.metric = "mean_error"`
-* Mean in-class AUC: `eval.metric = "auc"`
+* Mean per-class classification error rate: `eval.metric = "mean_error"`
+* Mean per-class AUC: `eval.metric = "auc"`
 * Cross-entropy / logarithmic loss: `eval.metric = "logloss"`
 
 Cross-validation using the **voting** probability estimator:

@@ -26,6 +26,7 @@ Suggests:
     mlbench (>= 2.1-1),
     caTools (>= 1.17.1),
     glmnet (>= 2.0-5),
+    gridExtra (>= 2.2.1),
     pander,
     testthat,
     knitr,

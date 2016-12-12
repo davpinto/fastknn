@@ -211,8 +211,8 @@ sprintf(&quot;Accuracy: %.2f&quot;, 100 * (1 - classLoss(actual = y.te, predicte
 <p>The <code>fastknn</code> provides a interface to select the best <code>k</code> using n-fold cross-validation. There are 4 possible <strong>loss functions</strong>:</p>
 <ul>
 <li>Overall classification error rate: <code>eval.metric = &quot;overall_error&quot;</code></li>
-<li>Mean in-class classification error rate: <code>eval.metric = &quot;mean_error&quot;</code></li>
-<li>Mean in-class AUC: <code>eval.metric = &quot;auc&quot;</code></li>
+<li>Mean per-class classification error rate: <code>eval.metric = &quot;mean_error&quot;</code></li>
+<li>Mean per-class AUC: <code>eval.metric = &quot;auc&quot;</code></li>
 <li>Cross-entropy / logarithmic loss: <code>eval.metric = &quot;logloss&quot;</code></li>
 </ul>
 <p>Cross-validation using the <strong>voting</strong> probability estimator:</p>

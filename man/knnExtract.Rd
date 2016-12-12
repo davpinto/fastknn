@@ -4,7 +4,7 @@
 \alias{knnExtract}
 \title{Nearest Neighbors Features}
 \usage{
-knnExtract(xtr, ytr, xte, k = 5, normalize = NULL, folds = 5)
+knnExtract(xtr, ytr, xte, k = 1, normalize = NULL, folds = 5)
 }
 \arguments{
 \item{xtr}{matrix containing the training instances.}
@@ -13,7 +13,7 @@ knnExtract(xtr, ytr, xte, k = 5, normalize = NULL, folds = 5)
 
 \item{xte}{matrix containing the test instances.}
 
-\item{k}{number of neighbors considered (default is 5). This choice is 
+\item{k}{number of neighbors considered (default is 1). This choice is 
 directly related to the number of new features. So, be careful with it. A 
 large \code{k} may increase a lot the computing time for big datasets.}
 

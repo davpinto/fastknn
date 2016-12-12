@@ -257,6 +257,7 @@ scaleData <- function(xtr, xte, type = "maxabs") {
    )
    
    ## Apply normalization
+   x.scaler[x.scaler == 0] <- 1
    xtr <- sweep(xtr, 2, x.center, "-")
    xtr <- sweep(xtr, 2, x.scaler, "/")
    xte <- sweep(xte, 2, x.center, "-")

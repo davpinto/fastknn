@@ -96,8 +96,8 @@ Find the Best k
 The `fastknn` provides a interface to select the best `k` using n-fold cross-validation. There are 4 possible **loss functions**:
 
 -   Overall classification error rate: `eval.metric = "overall_error"`
--   Mean in-class classification error rate: `eval.metric = "mean_error"`
--   Mean in-class AUC: `eval.metric = "auc"`
+-   Mean per-class classification error rate: `eval.metric = "mean_error"`
+-   Mean per-class AUC: `eval.metric = "auc"`
 -   Cross-entropy / logarithmic loss: `eval.metric = "logloss"`
 
 Cross-validation using the **voting** probability estimator:

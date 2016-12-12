@@ -51,6 +51,33 @@ pander::pander(as.data.frame.list(t1)[,1:3])
 
 Extremely fast!
 
+## Pre-Processing
+
+The `fastknn()` function provides 4 options to normalize data before the nearest neighbors searching process:
+
+- `normalize="std"`: standardize variables by removing the mean and scaling to unit variance.
+- `normalize="minmax"`: transforms variables by scaling each one between 0 and 1.
+- `normalize="maxabs"`: scales each variable by its maximum absolute value. This is the best choice for sparse data because it does not shift/center the variables.
+- `normalize="robust"`: scales variables using statistics that are robust to outliers. It removes the median and scales by the interquartile range (IQR).
+
+```{r, results='hide'}
+## Apply min-max normalization
+knn.norm <- fastknn(x.tr, y.tr, x.te, k = 15, method = "dist", normalize = "minmax")
+
+## Performance without normalization
+sprintf("Logloss without normalization: %.3f", classLoss(y.te, prob = knn.out$prob, eval.metric = "logloss"))
+
+## Performance with nromalization
+sprintf("Logloss with normalization: %.3f", classLoss(y.te, prob = knn.norm$prob, eval.metric = "logloss"))
+```
+
+```{r, echo=FALSE}
+sprintf("Logloss without normalization: %.3f", classLoss(y.te, prob = knn.out$prob, eval.metric = "logloss"))
+sprintf("Logloss with normalization: %.3f", classLoss(y.te, prob = knn.norm$prob, eval.metric = "logloss"))
+```
+
+For this dataset, normalization had a negative effect on classification performance, but in many cases it is important to transform variables to the same unit before fitting KNN.
+
 ## Find the Best k
 
 The **fastknn** provides a n-fold cross-validation procedure to define the best *k* according to 4 different evaluation metrics:
