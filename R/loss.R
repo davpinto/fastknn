@@ -55,18 +55,42 @@
 #' classLoss(actual = y.te, predicted = knn.out$class, prob = knn.out$prob, eval.metric = "logloss")
 #' }
 classLoss <- function(actual, predicted, prob, eval.metric = "overall_error") {
+   #### Check args
+   stopifnot(is.factor(actual))
+   if (!missing(predicted)) {
+      stopifnot(is.factor(predicted))
+      if(length(actual) != length(predicted))
+         stop("actual and predicted must be the same lengths")
+      if(!all.equal(levels(actual), levels(predicted)))
+         stop("actual and predicted must be the same levels (class labels)")
+   }
+   if (!missing(prob)) {
+      stopifnot(is.matrix(prob))
+      stopifnot(ncol(prob) == nlevels(actual))
+   }
+   stopifnot(eval.metric %in% c("overall_error", "mean_error", "auc", "logloss"))
+   
+   #### Choose loss function
    loss <- switch(
       eval.metric,
       "overall_error" = {
+         if (missing(predicted))
+            stop("parameter 'predicted' is missing")
          1 - sum(actual == predicted) / length(actual)
       },
       "mean_error" = {
+         if (missing(predicted))
+            stop("parameter 'predicted' is missing")
          multiClassError(actual, predicted)
       },
       "auc" = {
+         if (missing(prob))
+            stop("parameter 'prob' is missing")
          multiAUC(actual, prob)
       },
       "logloss" = {
+         if (missing(prob))
+            stop("parameter 'prob' is missing")
          multiLogLoss(actual, prob)
       }
    )

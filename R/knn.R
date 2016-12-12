@@ -80,21 +80,8 @@
 fastknn <- function(xtr, ytr, xte, k, method = "dist", normalize = NULL) {
    
    #### Check args
-   stopifnot(is.matrix(xtr))
-   stopifnot(is.factor(ytr))
-   stopifnot(nrow(xtr) == length(ytr))
-   stopifnot(is.matrix(xte))
-   stopifnot(is.numeric(k))
+   checkKnnArgs(xtr, ytr, xte, k)
    stopifnot(method %in% c("vote","dist"))
-   if (length(k) > 1) {
-      stop("k must be a single value")
-   }
-   if (k > nrow(xtr)) {
-      stop("The number of nearest neighbors cannot be greater than the number of training instances.")
-   }
-   if (k < 1) {
-      stop("k must be at least 1.")
-   }
    
    #### Normalize data
    if (!is.null(normalize)) {
@@ -283,10 +270,34 @@ scaleData <- function(xtr, xte, type = "maxabs") {
 
 #### Split data into folds using stratified sampling
 createCVFolds <- function(y, n) {
+   stopifnot(is.factor(y))
+   
    folds <- integer(length(y))
    for (i in levels(y)) {
       folds[which(y == i)] <- sample(cut(1:sum(y == i), breaks = n, labels = FALSE))
    }
    
    return(folds)
+}
+
+#### Validate fastknn() parameters
+checkKnnArgs <- function(xtr, ytr, xte, k) {
+   stopifnot(is.matrix(xtr))
+   stopifnot(is.factor(ytr))
+   stopifnot(nrow(xtr) == length(ytr))
+   stopifnot(is.matrix(xte))
+   stopifnot(ncol(xtr) == ncol(xte))
+   stopifnot(is.numeric(k))
+   if (nlevels(ytr) < 2) {
+      stop("Data must contain at least 2 class labels.")
+   }
+   if (length(k) > 1) {
+      stop("k must be a single value.")
+   }
+   if (k > nrow(xtr)) {
+      stop("The number of nearest neighbors cannot be greater than the number of training instances.")
+   }
+   if (k < 1) {
+      stop("k must be at least 1.")
+   }
 }

@@ -47,6 +47,11 @@
 #' }
 knnDecision <- function(xtr, ytr, xte, yte, k, method = "dist", 
                         normalize = NULL, dpi = 150) {
+   #### Check args
+   stopifnot(is.numeric(dpi))
+   if (ncol(xtr) < 2) {
+      stop("x must contain at least 2 variables")
+   }
    
    #### Resample data
    x1 <- seq(
@@ -70,7 +75,8 @@ knnDecision <- function(xtr, ytr, xte, yte, k, method = "dist",
    } else {
       points.df <- data.frame(x1 = xte[,1], x2 = xte[,2], label = yte)
    }
-   y.hat <- fastknn(xtr[, 1:2, drop = FALSE], ytr, x.new, k, method, normalize)
+   y.hat <- fastknn(xtr = xtr[, 1:2, drop = FALSE], ytr = ytr, xte = x.new, 
+                    k = k, method = method, normalize = normalize)
    if (nlevels(ytr) > 2) {
       decision.df <- data.frame(x1 = x.new[,1], x2 = x.new[,2], 
                                 y = y.hat$class, 

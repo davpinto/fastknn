@@ -28,7 +28,7 @@
 #' @param xtr matrix containing the training instances.
 #' @param xte matrix containing the test instances.
 #' @param ytr factor array with the training labels.
-#' @param k number of neighbors considered (default is 5). This choice is 
+#' @param k number of neighbors considered (default is 1). This choice is 
 #' directly related to the number of new features. So, be careful with it. A 
 #' large \code{k} may increase a lot the computing time for big datasets.
 #' @param normalize variable scaler as in \code{\link{fastknn}}.
@@ -84,7 +84,10 @@
 #' yhat <- factor(yhat, levels = levels(y.tr))
 #' classLoss(actual = y.te, predicted = yhat)
 #' }
-knnExtract <- function(xtr, ytr, xte, k = 5, normalize = NULL, folds = 5) {
+knnExtract <- function(xtr, ytr, xte, k = 1, normalize = NULL, folds = 5) {
+   #### Check args
+   checkKnnArgs(xtr, ytr, xte, k)
+   
    #### Check and create data folds
    if (length(folds) > 1) {
       if (length(unique(folds)) < 3) {
