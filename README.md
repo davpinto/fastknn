@@ -533,37 +533,37 @@ res
 <tr class="odd">
 <td align="center">knn</td>
 <td align="center">10000</td>
-<td align="center">1.232</td>
+<td align="center">1.212</td>
 <td align="center">73.38</td>
 </tr>
 <tr class="even">
 <td align="center">fastknn</td>
 <td align="center">10000</td>
-<td align="center">0.138</td>
+<td align="center">0.121</td>
 <td align="center">77.04</td>
 </tr>
 <tr class="odd">
 <td align="center">knn</td>
 <td align="center">15000</td>
-<td align="center">2.834</td>
+<td align="center">3.079</td>
 <td align="center">73.71</td>
 </tr>
 <tr class="even">
 <td align="center">fastknn</td>
 <td align="center">15000</td>
-<td align="center">0.167</td>
+<td align="center">0.149</td>
 <td align="center">76.82</td>
 </tr>
 <tr class="odd">
 <td align="center">knn</td>
 <td align="center">20000</td>
-<td align="center">6.068</td>
+<td align="center">6.02</td>
 <td align="center">76.38</td>
 </tr>
 <tr class="even">
 <td align="center">fastknn</td>
 <td align="center">20000</td>
-<td align="center">0.193</td>
+<td align="center">0.177</td>
 <td align="center">80.37</td>
 </tr>
 </tbody>

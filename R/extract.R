@@ -123,7 +123,7 @@ knnExtract <- function(xtr, ytr, xte, k = 1, normalize = NULL, folds = 5) {
    tr.feat <- pbapply::pblapply(levels(ytr), function(y.label) {
       ## Iterate over data folds
       cv.feat <- lapply(levels(folds), function(fold.id) {
-         te.idx <- which(fold.id == folds)
+         te.idx <- which(folds == fold.id)
          tr.idx <- base::intersect(
             base::setdiff(1:nrow(xtr), te.idx),
             which(ytr == y.label)
@@ -158,5 +158,60 @@ knnExtract <- function(xtr, ytr, xte, k = 1, normalize = NULL, folds = 5) {
    return(list(
       new.tr = tr.feat,
       new.te = te.feat
+   ))
+}
+
+knnStack <- function(xtr, ytr, xte, k = 10, method = "dist", normalize = NULL, 
+                     folds = 5) {
+   #### Check args
+   checkKnnArgs(xtr, ytr, xte, k)
+   
+   #### Check and create data folds
+   if (length(folds) > 1) {
+      if (length(unique(folds)) < 3) {
+         stop('The smallest number of folds allowable is 3')
+      }
+      if (length(unique(folds)) > nrow(xtr)) {
+         stop('The highest number of folds allowable is nobs (leave-one-out CV)')
+      }
+   } else {
+      folds <- min(max(3, folds), nrow(xtr))
+      if (folds > 10) {
+         warning("The number of folds is greater than 10. It may take too much time.")
+      }
+      folds <- createCVFolds(ytr, n = folds)
+   }
+   
+   #### Transform fold ids to factor
+   folds <- factor(paste('fold', folds, sep = '_'), 
+                   levels = paste('fold', sort(unique(folds)), sep = '_'))
+   
+   #### Predict probabilities for the training set
+   ## n-fold CV is used to avoid overfitting
+   message("Building new training set...")
+   tr.prob <- pbapply::pblapply(levels(folds), function(fold.id) {
+      val.idx <- which(folds == fold.id)
+      val.prob <- fastknn(xtr[-val.idx,], ytr[-val.idx], xtr[val.idx,], k = k, 
+                          method = method, normalize = normalize)$prob
+      cbind(val.idx, val.prob)
+   })
+   tr.prob <- do.call('rbind', tr.prob)
+   tr.prob <- tr.prob[order(tr.prob[, 1, drop = TRUE]),]
+   tr.prob <- tr.prob[, -1, drop = FALSE]
+   colnames(tr.prob) <- levels(ytr)
+   
+   #### Predict probabilities for the test set
+   message("Building new test set...")
+   te.prob <- fastknn(xtr, ytr, xte, k = k, method = method, 
+                      normalize = normalize)$prob
+   colnames(te.prob) <- levels(ytr)
+   
+   #### Force to free memory
+   rm(list = c("xtr", "ytr", "xte"))
+   gc()
+   
+   return(list(
+      new.tr = tr.prob,
+      new.te = te.prob
    ))
 }
