@@ -1,5 +1,8 @@
 #' @import ggplot2
+NULL
 
-#' @importFrom magrittr %>%
-#' @export
-magrittr::`%>%`
+#' @importFrom utils txtProgressBar setTxtProgressBar
+NULL
+
+#' @importFrom foreach %dopar%
+NULL

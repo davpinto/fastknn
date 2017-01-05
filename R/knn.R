@@ -144,6 +144,7 @@ fastknn <- function(xtr, ytr, xte, k, method = "dist", normalize = NULL) {
 #' \code{fastknnCV} does stratified sampling.
 #' @param eval.metric classification loss measure to use in cross-validation. 
 #' See \code{\link{classLoss}} for more details.
+#' @param nthread the number of CPU threads to use (default is 1).
 #' 
 #' @return \code{list} with cross-validation results:
 #' \itemize{
@@ -186,8 +187,7 @@ fastknn <- function(xtr, ytr, xte, k, method = "dist", normalize = NULL) {
 #' cv.out$cv_table
 #' }
 fastknnCV <- function(x, y, k = 3:15, method = "dist", normalize = NULL, 
-                      folds = 5, eval.metric = "overall_error") {
-   
+                      folds = 5, eval.metric = "overall_error", nthread = 1) {
    #### Check and create data folds
    if (length(folds) > 1) {
       if (length(unique(folds)) < 3) {
@@ -200,22 +200,51 @@ fastknnCV <- function(x, y, k = 3:15, method = "dist", normalize = NULL,
       folds <- min(max(3, folds), nrow(x))
       folds <- createCVFolds(y, n = folds)
    }
+   nfolds <- length(unique(folds))
+   
+   #### Parallel computing
+   ## Check cores
+   max.cores <- parallel::detectCores()
+   if (nthread > max.cores) {
+      warning(paste("Only", max.cores, "cores available."))
+      nthread <- max.cores
+   }
+   nthread <- min(nthread, nfolds)
+   ## Allocate cores
+   cl <- parallel::makeCluster(spec = rep("localhost", nthread), type = "SOCK")
+   doSNOW::registerDoSNOW(cl)
    
    #### n-fold cross validation
    folds <- factor(paste('fold', folds, sep = '_'), 
-                   levels = paste('fold', sort(unique(folds)), sep = '_')) 
-   cv.results <- pbapply::pblapply(k, function(k, x, y, folds) {
-      sapply(levels(folds), function(fold.id) {
-         te.idx <- which(folds == fold.id)
-         y.hat <- fastknn(x[-te.idx,], y[-te.idx], x[te.idx,], k, method, 
-                          normalize)
+                   levels = paste('fold', sort(unique(folds)), sep = '_'))
+   ## Instantiate progress bar
+   pb <- txtProgressBar(min = 0, max = nfolds, style = 3)
+   pb.update <- function(n) setTxtProgressBar(pb, n)
+   pb.opts <- list(progress = pb.update)
+   ## Iterate over cv folds
+   cv.results <- foreach::foreach(
+      fold.id = levels(folds), .combine = 'cbind.data.frame',
+      .options.snow = pb.opts, .verbose = FALSE
+   ) %dopar% {
+      te.idx <- which(folds == fold.id)
+      scores <- sapply(k, function(k) {
+         y.hat <- fastknn(x[-te.idx,], y[-te.idx], x[te.idx,], k = k,
+                          method = method, normalize = normalize)
          classLoss(actual = y[te.idx], predicted = y.hat$class, 
                    prob = y.hat$prob, eval.metric = eval.metric)
-      }, simplify = FALSE, USE.NAMES = TRUE)
-   }, x = x, y = y, folds = folds)
-   cv.results <- do.call('rbind.data.frame', cv.results)
+      }, USE.NAMES = FALSE, simplify = TRUE)
+      
+      scores <- data.frame(x = scores)
+      names(scores) <- fold.id
+      return(scores)
+   }
+   close(pb)
    cv.results$mean <- rowMeans(cv.results)
    cv.results$k <- k
+   
+   #### Free allocated cores
+   parallel::stopCluster(cl)
+   gc(verbose = FALSE)
    
    #### Select best performance
    if (eval.metric == "auc") {

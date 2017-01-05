@@ -7,7 +7,7 @@ Fast k-Nearest Neighbor Classifier
 
 ------------------------------------------------------------------------
 
-The `fastknn` in now available on [Kaggle](https://github.com/Kaggle/docker-rstats). Take a look a this [kernel](https://www.kaggle.com/davidpinto/d/uciml/forest-cover-type-dataset/fastknn-show-to-glm-what-knn-see-0-96) to see an example on how to use `fastknn` to improve your performance on **Kaggle** competitions.
+The `fastknn` in now available on [Kaggle](https://github.com/Kaggle/docker-rstats). Take a look at this [kernel](https://www.kaggle.com/davidpinto/d/uciml/forest-cover-type-dataset/fastknn-show-to-glm-what-knn-see-0-96) to see an example on how to use `fastknn` to improve your performance on **Kaggle** competitions.
 
 ------------------------------------------------------------------------
 
@@ -54,8 +54,8 @@ install_github("davpinto/fastknn")
 The base of `fastknn` is the `RANN` package, but other packages are required to make `fastknn` work properly. All of them are automatically installed when you install the `fastknn`.
 
 -   `RANN` for fast nearest neighbors searching,
--   `magrittr` to use the pipe operator `%>%`,
 -   `pbapply` to show a progress bar during cross-validation,
+-   `foreach` and `doSNOW` to do parallelized cross-validation,
 -   `Metrics` to measure classification performance,
 -   `matrixStats` for fast matrix column-wise and row-wise statistics,
 -   `ggplot2` to plot classification decision boundaries,

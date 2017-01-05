@@ -122,6 +122,9 @@ test_that("stratified fold sampling", {
 })
 
 test_that("n-fold cross validation", {
+   # https://github.com/hadley/testthat/issues/129
+   Sys.setenv("R_TESTS" = "")
+   
    k.list <- 1:3
    nfolds <- 3
    cv.out <- fastknnCV(x.tr, y.tr, k = k.list, folds = nfolds)
@@ -131,7 +134,19 @@ test_that("n-fold cross validation", {
    expect_equal(cv.out$best_eval, min(cv.out$cv_table$mean))
 })
 
+test_that("parallelized n-fold cross validation", {
+   Sys.setenv("R_TESTS" = "")
+   k.list <- 1:3
+   nfolds <- 3
+   cv.out <- fastknnCV(x.tr, y.tr, k = k.list, folds = nfolds, nthread = 2)
+   expect_equal(ncol(cv.out$cv_table), nfolds + 2)
+   expect_equal(nrow(cv.out$cv_table), length(k.list))
+   expect_equal(cv.out$best_k, cv.out$cv_table$k[which.min(cv.out$cv_table$mean)])
+   expect_equal(cv.out$best_eval, min(cv.out$cv_table$mean))
+})
+
 test_that("n-fold cross validation with pre-defined ids", {
+   Sys.setenv("R_TESTS" = "")
    k.list <- 1:3
    cv.out <- fastknnCV(x, y, k = k.list, folds = cv.ids)
    expect_equal(ncol(cv.out$cv_table), length(unique(cv.ids)) + 2)

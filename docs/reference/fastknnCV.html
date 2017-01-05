@@ -82,7 +82,7 @@
     
 
     <pre><span class='fu'>fastknnCV</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>3</span>:<span class='fl'>15</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"dist"</span>, <span class='kw'>normalize</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>folds</span> <span class='kw'>=</span> <span class='fl'>5</span>,
-  <span class='kw'>eval.metric</span> <span class='kw'>=</span> <span class='st'>"overall_error"</span>)</pre>
+  <span class='kw'>eval.metric</span> <span class='kw'>=</span> <span class='st'>"overall_error"</span>, <span class='kw'>nthread</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
@@ -104,6 +104,8 @@ value allowable is <code>nfolds=3</code>. The fold assigment given by
       <dt>eval.metric</dt>
       <dd>classification loss measure to use in cross-validation. 
 See <code><a href='classLoss.html'>classLoss</a></code> for more details.</dd>
+      <dt>nthread</dt>
+      <dd>the number of CPU threads to use (default is 1).</dd>
     </dl>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>

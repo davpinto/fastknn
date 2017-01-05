@@ -131,9 +131,9 @@ multiLogLoss <- function(actual, predicted, eps = 1e-15) {
 
 #### Transform labels into a binary matrix
 decodeLabels <- function(y) {
-   y.mat <- 1:length(y) %>% 
-      table(y) %>% 
-      as.data.frame.matrix()
+   y.mat <-  as.data.frame.matrix(
+      table(1:length(y), y)
+   )
    
    return(y.mat)
 }

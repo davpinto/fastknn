@@ -18,10 +18,11 @@ Imports:
     RANN (>= 2.5),
     ggplot2 (>= 2.1.0),
     viridis (>= 0.3.4),
-    magrittr (>= 1.5),
     pbapply (>= 1.1-1),
     matrixStats (>= 0.14.0),
-    Metrics (>= 0.1.1)
+    Metrics (>= 0.1.1),
+    foreach (>= 1.4.3),
+    doSNOW (>= 1.0.14)
 Suggests:
     mlbench (>= 2.1-1),
     caTools (>= 1.17.1),

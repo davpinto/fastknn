@@ -12,5 +12,5 @@
 }
 
 .onAttach <- function(libname, pkgname) {
-   packageStartupMessage("FastKNN version 0.1.0")
+   packageStartupMessage("FastKNN version 0.9.0")
 }

@@ -5,7 +5,7 @@
 \title{Cross-Validation for fastknn}
 \usage{
 fastknnCV(x, y, k = 3:15, method = "dist", normalize = NULL, folds = 5,
-  eval.metric = "overall_error")
+  eval.metric = "overall_error", nthread = 1)
 }
 \arguments{
 \item{x}{input matrix of dimension \code{nobs x nvars}.}
@@ -25,6 +25,8 @@ value allowable is \code{nfolds=3}. The fold assigment given by
 
 \item{eval.metric}{classification loss measure to use in cross-validation. 
 See \code{\link{classLoss}} for more details.}
+
+\item{nthread}{the number of CPU threads to use (default is 1).}
 }
 \value{
 \code{list} with cross-validation results:
