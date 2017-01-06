@@ -21,7 +21,7 @@ The **fastknn** provides a function to do feature extraction using KNN. It gener
 1. The third test feature contains the sums of distances between each test instance and its 3 nearest neighbors inside the first class.
 1. And so on.
 
-This procedure repeats for each class label, generating `k * c` new features. Then, the new training features are generated using a n-fold CV approach, in order to avoid overfitting. 
+This procedure repeats for each class label, generating `k * c` new features. Then, the new training features are generated using a n-fold CV approach, in order to avoid overfitting. Parallelization is available. You can specify the number of threads via `nthread` parameter.
 
 The **feature extraction** technique proposed here is based on the ideas presented in the [winner solution](https://www.kaggle.com/c/otto-group-product-classification-challenge/forums/t/14335/1st-place-winner-solution-gilberto-titericz-stanislav-semenov) of the [Otto Group Product Classification Challenge](https://www.kaggle.com/c/otto-group-product-classification-challenge) on **Kaggle**.
 

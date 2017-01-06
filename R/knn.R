@@ -203,16 +203,7 @@ fastknnCV <- function(x, y, k = 3:15, method = "dist", normalize = NULL,
    nfolds <- length(unique(folds))
    
    #### Parallel computing
-   ## Check cores
-   max.cores <- parallel::detectCores()
-   if (nthread > max.cores) {
-      warning(paste("Only", max.cores, "cores available."))
-      nthread <- max.cores
-   }
-   nthread <- min(nthread, nfolds)
-   ## Allocate cores
-   cl <- parallel::makeCluster(spec = rep("localhost", nthread), type = "SOCK")
-   doSNOW::registerDoSNOW(cl)
+   cl <- createCluster(nthread, nfolds)
    
    #### n-fold cross validation
    folds <- factor(paste('fold', folds, sep = '_'), 
@@ -243,8 +234,7 @@ fastknnCV <- function(x, y, k = 3:15, method = "dist", normalize = NULL,
    cv.results$k <- k
    
    #### Free allocated cores
-   parallel::stopCluster(cl)
-   gc(verbose = FALSE)
+   closeCluster(cl)
    
    #### Select best performance
    if (eval.metric == "auc") {
@@ -296,6 +286,30 @@ scaleData <- function(xtr, xte, type = "maxabs") {
       new.tr = xtr,
       new.te = xte
    ))
+}
+
+#### Create snow cluster
+createCluster <- function(ncores, nlimit) {
+   ## Check cores
+   max.cores <- parallel::detectCores()
+   if (ncores > max.cores) {
+      warning(paste("Only", max.cores, "cores available."))
+      ncores <- max.cores
+   }
+   ncores <- min(ncores, nlimit)
+   ## Allocate cores
+   cl <- parallel::makeCluster(spec = rep("localhost", ncores), type = "SOCK")
+   doSNOW::registerDoSNOW(cl)
+   
+   return(cl)
+}
+
+#### Close snow cluster
+closeCluster <- function(cl) {
+   parallel::stopCluster(cl)
+   gc(verbose = FALSE)
+   
+   invisible(TRUE)
 }
 
 #### Split data into folds using stratified sampling

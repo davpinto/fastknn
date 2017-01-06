@@ -85,7 +85,8 @@ a great classification performance using a simple linear model on the new
 features, like GLM or LDA.</p>
     
 
-    <pre><span class='fu'>knnExtract</span>(<span class='no'>xtr</span>, <span class='no'>ytr</span>, <span class='no'>xte</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>normalize</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>folds</span> <span class='kw'>=</span> <span class='fl'>5</span>)</pre>
+    <pre><span class='fu'>knnExtract</span>(<span class='no'>xtr</span>, <span class='no'>ytr</span>, <span class='no'>xte</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>normalize</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>folds</span> <span class='kw'>=</span> <span class='fl'>5</span>,
+  <span class='kw'>nthread</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
@@ -105,6 +106,8 @@ large <code>k</code> may increase a lot the computing time for big datasets.</dd
       <dd>number of folds (default is 5) or an array with fold ids between 
 1 and <code>n</code> identifying what fold each observation is in. The smallest 
 value allowable is <code>nfolds=3</code>.</dd>
+      <dt>nthread</dt>
+      <dd>the number of CPU threads to use (default is 1).</dd>
     </dl>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>

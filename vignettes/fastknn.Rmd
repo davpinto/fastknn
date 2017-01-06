@@ -96,6 +96,8 @@ cv.out$cv_table
 pander::pander(cv.out$cv_table)
 ```
 
+Parallelization is available. You can specify the number of threads via `nthread` parameter.
+
 ## Plot Decision Boundaries
 
 The **fastknn** provides a plotting function to draw classification decision boundaries for bi-dimensional datasets.

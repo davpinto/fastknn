@@ -54,7 +54,6 @@ install_github("davpinto/fastknn")
 The base of `fastknn` is the `RANN` package, but other packages are required to make `fastknn` work properly. All of them are automatically installed when you install the `fastknn`.
 
 -   `RANN` for fast nearest neighbors searching,
--   `pbapply` to show a progress bar during cross-validation,
 -   `foreach` and `doSNOW` to do parallelized cross-validation,
 -   `Metrics` to measure classification performance,
 -   `matrixStats` for fast matrix column-wise and row-wise statistics,
@@ -410,6 +409,8 @@ cv.out$cv_table
 
 Note that the mean **log-loss** for the **weighted voting** estimator is lower for every `k` evaluated.
 
+Parallelization is available. You can specify the number of threads via `nthread` parameter.
+
 Plot Classification Decision Boundary
 -------------------------------------
 
@@ -719,6 +720,8 @@ We can see that the **KNN features** improved a lot the classification performan
 
 The `knnExtract()` function is based on the ideas presented in the
 [winner solution](https://www.kaggle.com/c/otto-group-product-classification-challenge/forums/t/14335/1st-place-winner-solution-gilberto-titericz-stanislav-semenov) of the [Otto Group Product Classification Challenge](https://www.kaggle.com/c/otto-group-product-classification-challenge) on **Kaggle**.
+
+Parallelization is available. You can specify the number of threads via `nthread` parameter.
 
 ### Understanding the KNN Features
 

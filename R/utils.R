@@ -4,5 +4,5 @@ NULL
 #' @importFrom utils txtProgressBar setTxtProgressBar
 NULL
 
-#' @importFrom foreach %dopar%
+#' @importFrom foreach %:% %dopar%
 NULL

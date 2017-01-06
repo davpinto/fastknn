@@ -35,6 +35,7 @@
 #' @param folds number of folds (default is 5) or an array with fold ids between 
 #' 1 and \code{n} identifying what fold each observation is in. The smallest 
 #' value allowable is \code{nfolds=3}.
+#' @param nthread the number of CPU threads to use (default is 1).
 #'
 #' @return \code{list} with the new data:
 #' \itemize{
@@ -84,7 +85,8 @@
 #' yhat <- factor(yhat, levels = levels(y.tr))
 #' classLoss(actual = y.te, predicted = yhat)
 #' }
-knnExtract <- function(xtr, ytr, xte, k = 1, normalize = NULL, folds = 5) {
+knnExtract <- function(xtr, ytr, xte, k = 1, normalize = NULL, folds = 5, 
+                       nthread = 1) {
    #### Check args
    checkKnnArgs(xtr, ytr, xte, k)
    
@@ -103,6 +105,10 @@ knnExtract <- function(xtr, ytr, xte, k = 1, normalize = NULL, folds = 5) {
       }
       folds <- createCVFolds(ytr, n = folds)
    }
+   nfolds <- length(unique(folds))
+   
+   #### Parallel computing
+   cl <- createCluster(nthread, nfolds)
    
    #### Transform fold ids to factor
    folds <- factor(paste('fold', folds, sep = '_'), 
@@ -120,41 +126,67 @@ knnExtract <- function(xtr, ytr, xte, k = 1, normalize = NULL, folds = 5) {
    #### Extract features from training set
    ## n-fold CV is used to avoid overfitting
    message("Building new training set...")
-   tr.feat <- pbapply::pblapply(levels(ytr), function(y.label) {
-      ## Iterate over data folds
-      cv.feat <- lapply(levels(folds), function(fold.id) {
-         te.idx <- which(folds == fold.id)
-         tr.idx <- base::intersect(
-            base::setdiff(1:nrow(xtr), te.idx),
-            which(ytr == y.label)
-         )
-         dist.mat <- RANN::nn2(data = xtr[tr.idx, ], query = xtr[te.idx, ], 
-                               k = k, treetype = 'kd', 
-                               searchtype = 'standard')$nn.dists
-         cbind(te.idx, matrixStats::rowCumsums(dist.mat))
-      })
-      tr.new <- do.call('rbind', cv.feat)
-      tr.new <- tr.new[order(tr.new[, 1, drop = TRUE]),]
-      return(tr.new[, -1])
-   })
-   tr.feat <- round(do.call('cbind', tr.feat), 6)
-   colnames(tr.feat) <- paste0("knn", 1:ncol(tr.feat))
+   ## Formater functions
+   orderFolds <- function(x) {
+      x <- x[order(x[, 1, drop = TRUE]),]
+      return(x[,-1,drop = FALSE])
+   }
+   formatFeatures <- function(x) {
+      x <- round(x, 6)
+      colnames(x) <- paste0("knn", 1:ncol(x))
+      return(x)
+   }
+   ## Progress bar
+   pb <- txtProgressBar(min = 0, max = nfolds * nlevels(ytr), style = 3)
+   pb.update <- function(n) setTxtProgressBar(pb, n)
+   pb.opts <- list(progress = pb.update)
+   ## Iterate over class labels and cv folds
+   tr.feat <- foreach::foreach(
+      y.label = levels(ytr), 
+      .combine = "cbind",
+      .final = formatFeatures
+   ) %:% foreach::foreach(
+      fold.id = levels(folds),
+      .combine = "rbind",
+      .final = orderFolds,
+      .options.snow = pb.opts
+   ) %dopar% {
+      te.idx <- which(folds == fold.id)
+      tr.idx <- base::intersect(
+         base::setdiff(1:nrow(xtr), te.idx),
+         which(ytr == y.label)
+      )
+      dist.mat <- RANN::nn2(data = xtr[tr.idx, ], query = xtr[te.idx, ], 
+                            k = k, treetype = 'kd', 
+                            searchtype = 'standard')$nn.dists
+      cbind(te.idx, matrixStats::rowCumsums(dist.mat))
+   }
+   close(pb)
    
    #### Extract features from test set
    message("Building new test set...")
-   te.feat <- pbapply::pblapply(levels(ytr), function(y.label) {
+   ## Progress bar
+   pb <- txtProgressBar(min = 0, max = nlevels(ytr), style = 3)
+   ## Iterate over class labels
+   te.feat <- foreach::foreach(
+      y.label = levels(ytr), 
+      .combine = "cbind",
+      .final = formatFeatures,
+      .options.snow = pb.opts
+   ) %dopar% {
       idx <- which(ytr == y.label)
       dist.mat <- RANN::nn2(data = xtr[idx, ], query = xte, k = k, 
                             treetype = 'kd', searchtype = 'standard')$nn.dists
       matrixStats::rowCumsums(dist.mat)
-   })
-   te.feat <- round(do.call('cbind', te.feat), 6)
-   colnames(te.feat) <- paste0("knn", 1:ncol(te.feat))
+   }
+   close(pb)
    
    #### Force to free memory
    rm(list = c("xtr", "ytr", "xte"))
-   gc()
-   
+
+   #### Free allocated cores
+   closeCluster(cl)
+      
    return(list(
       new.tr = tr.feat,
       new.te = te.feat

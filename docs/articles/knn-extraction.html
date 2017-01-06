@@ -48,7 +48,7 @@
 <li>The second test feature contains the sums of distances between each test instance and its 2 nearest neighbors inside the first class.</li>
 <li>The third test feature contains the sums of distances between each test instance and its 3 nearest neighbors inside the first class.</li>
 <li>And so on.</li>
-</ol><p>This procedure repeats for each class label, generating <code>k * c</code> new features. Then, the new training features are generated using a n-fold CV approach, in order to avoid overfitting.</p>
+</ol><p>This procedure repeats for each class label, generating <code>k * c</code> new features. Then, the new training features are generated using a n-fold CV approach, in order to avoid overfitting. Parallelization is available. You can specify the number of threads via <code>nthread</code> parameter.</p>
 <p>The <strong>feature extraction</strong> technique proposed here is based on the ideas presented in the <a href="https://www.kaggle.com/c/otto-group-product-classification-challenge/forums/t/14335/1st-place-winner-solution-gilberto-titericz-stanislav-semenov">winner solution</a> of the <a href="https://www.kaggle.com/c/otto-group-product-classification-challenge">Otto Group Product Classification Challenge</a> on <strong>Kaggle</strong>.</p>
 <p>The following example shows that the <strong>KNN features</strong> carry information about the original data that can not be extracted by a linear learner, like a GLM model:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"mlbench"</span>)

@@ -76,7 +76,6 @@ P(x_i \in y_j) = \displaystyle\frac{\displaystyle\sum\limits_{k=1}^K \left( \fra
 <h3 class="hasAnchor"><a href="#required-packages" class="anchor"> </a>Required Packages</h3>
 <p>The base of <code>fastknn</code> is the <code>RANN</code> package, but other packages are required to make <code>fastknn</code> work properly. All of them are automatically installed when you install the <code>fastknn</code>.</p>
 <ul><li><code>RANN</code> for fast nearest neighbors searching,</li>
-<li><code>pbapply</code> to show a progress bar during cross-validation,</li>
 <li><code>foreach</code> and <code>doSNOW</code> to do parallelized cross-validation,</li>
 <li><code>Metrics</code> to measure classification performance,</li>
 <li><code>matrixStats</code> for fast matrix column-wise and row-wise statistics,</li>
@@ -329,6 +328,7 @@ cv.out$cv_table</code></pre></div>
 <td align="center">0.5128</td>
 <td align="center">15</td>
 </tr></tbody></table><p>Note that the mean <strong>log-loss</strong> for the <strong>weighted voting</strong> estimator is lower for every <code>k</code> evaluated.</p>
+<p>Parallelization is available. You can specify the number of threads via <code>nthread</code> parameter.</p>
 </div>
 <div id="plot-classification-decision-boundary" class="section level2">
 <h2 class="hasAnchor"><a href="#plot-classification-decision-boundary" class="anchor"> </a>Plot Classification Decision Boundary</h2>
@@ -542,6 +542,7 @@ yhat2 &lt;-<span class="st"> </span><span class="kw">factor</span>(yhat, <span c
 <pre><code>## [1] "Accuracy: 95.24"</code></pre>
 <p>We can see that the <strong>KNN features</strong> improved a lot the classification performance of the GLM model.</p>
 <p>The <code><a href="reference/knnExtract.html">knnExtract()</a></code> function is based on the ideas presented in the<br><a href="https://www.kaggle.com/c/otto-group-product-classification-challenge/forums/t/14335/1st-place-winner-solution-gilberto-titericz-stanislav-semenov">winner solution</a> of the <a href="https://www.kaggle.com/c/otto-group-product-classification-challenge">Otto Group Product Classification Challenge</a> on <strong>Kaggle</strong>.</p>
+<p>Parallelization is available. You can specify the number of threads via <code>nthread</code> parameter.</p>
 <div id="understanding-the-knn-features" class="section level3">
 <h3 class="hasAnchor"><a href="#understanding-the-knn-features" class="anchor"> </a>Understanding the KNN Features</h3>
 <p>KNN makes a nonlinear mapping of the original space and project it into a linear one, in which the classes are linearly separable.</p>

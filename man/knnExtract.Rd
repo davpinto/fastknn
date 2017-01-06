@@ -4,7 +4,8 @@
 \alias{knnExtract}
 \title{Nearest Neighbors Features}
 \usage{
-knnExtract(xtr, ytr, xte, k = 1, normalize = NULL, folds = 5)
+knnExtract(xtr, ytr, xte, k = 1, normalize = NULL, folds = 5,
+  nthread = 1)
 }
 \arguments{
 \item{xtr}{matrix containing the training instances.}
@@ -22,6 +23,8 @@ large \code{k} may increase a lot the computing time for big datasets.}
 \item{folds}{number of folds (default is 5) or an array with fold ids between 
 1 and \code{n} identifying what fold each observation is in. The smallest 
 value allowable is \code{nfolds=3}.}
+
+\item{nthread}{the number of CPU threads to use (default is 1).}
 }
 \value{
 \code{list} with the new data:
