@@ -3,11 +3,11 @@ Fast k-Nearest Neighbor Classifier
 
 > Fast KNN with shrinkage estimator for the class membership probabilities
 
-[![Travis-CI Build Status](https://travis-ci.org/davpinto/fastknn.svg?branch=master)](https://travis-ci.org/davpinto/fastknn) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/fastknn?color=blue)](https://cran.r-project.org/package=fastknn)
+[![Travis-CI Build Status](https://travis-ci.org/davpinto/fastknn.svg?branch=master)](https://travis-ci.org/davpinto/fastknn) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/fastknn?color=blue)](https://cran.r-project.org/package=fastknn) [![codecov](https://codecov.io/github/davpinto/fastknn/branch/master/graphs/badge.svg)](https://codecov.io/github/davpinto/fastknn)
 
 ------------------------------------------------------------------------
 
-The `fastknn` in now available on [Kaggle](https://github.com/Kaggle/docker-rstats). Take a look at this [kernel](https://www.kaggle.com/davidpinto/d/uciml/forest-cover-type-dataset/fastknn-show-to-glm-what-knn-see-0-96) to see an example on how to use `fastknn` to improve your performance on **Kaggle** competitions.
+The `fastknn` is now available on [Kaggle](https://github.com/Kaggle/docker-rstats). Take a look at this [kernel](https://www.kaggle.com/davidpinto/d/uciml/forest-cover-type-dataset/fastknn-show-to-glm-what-knn-see-0-96) to see an example on how to use `fastknn` to improve your performance on **Kaggle** competitions.
 
 ------------------------------------------------------------------------
 

@@ -2,9 +2,6 @@
 title: "Fast k-Nearest Neighbor Classifier"
 output:
    github_document: default
-   html_document: 
-      toc: true
-      toc_depth: 2
 urlcolor: magenta
 ---
 
@@ -12,6 +9,8 @@ urlcolor: magenta
 
 [![Travis-CI Build Status](https://travis-ci.org/davpinto/fastknn.svg?branch=master)](https://travis-ci.org/davpinto/fastknn)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/fastknn?color=blue)](https://cran.r-project.org/package=fastknn)
+[![codecov](https://codecov.io/github/davpinto/fastknn/branch/master/graphs/badge.svg)](https://codecov.io/github/davpinto/fastknn) 
+
 
 ```{r setup, include=FALSE}
 ## rmarkdown::render('README.Rmd', 'github_document')
@@ -25,7 +24,7 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE,
 
 ------
 
-The `fastknn` in now available on [Kaggle](https://github.com/Kaggle/docker-rstats). Take a look at this [kernel](https://www.kaggle.com/davidpinto/d/uciml/forest-cover-type-dataset/fastknn-show-to-glm-what-knn-see-0-96) to see an example on how to use `fastknn` to improve your performance on **Kaggle** competitions.
+The `fastknn` is now available on [Kaggle](https://github.com/Kaggle/docker-rstats). Take a look at this [kernel](https://www.kaggle.com/davidpinto/d/uciml/forest-cover-type-dataset/fastknn-show-to-glm-what-knn-see-0-96) to see an example on how to use `fastknn` to improve your performance on **Kaggle** competitions.
 
 ------
 
