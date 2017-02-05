@@ -1,0 +1,7 @@
+templates:
+  params:
+    bootswatch: cosmo
+
+authors:
+  David Pinto:
+    href: https://davpinto.github.io
