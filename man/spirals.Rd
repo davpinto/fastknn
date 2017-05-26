@@ -16,5 +16,9 @@ spirals
 \description{
 Bidimensional binary dataset to be used as a toy example.
 }
+\seealso{
+Other Dataset: \code{\link{chess}},
+  \code{\link{covertype}}, \code{\link{multi_spirals}}
+}
 \keyword{datasets}
 

@@ -15,5 +15,9 @@ covertype
 \description{
 Sample of size 50k from the multiclass dataset Covertype hosted in the UCI repository.
 }
+\seealso{
+Other Dataset: \code{\link{chess}},
+  \code{\link{multi_spirals}}, \code{\link{spirals}}
+}
 \keyword{datasets}
 

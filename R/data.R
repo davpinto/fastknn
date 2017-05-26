@@ -8,6 +8,8 @@
 #'   \item{x2}{randomly generated numeric feature}
 #'   \item{target}{factor array with class labels}
 #' }
+#' 
+#' @family Dataset
 "chess"
 
 #' Spirals Dataset
@@ -20,6 +22,8 @@
 #'   \item{x2}{randomly generated numeric feature}
 #'   \item{target}{factor array with class labels}
 #' }
+#' 
+#' @family Dataset
 "spirals"
 
 #' Multi Spirals Dataset
@@ -32,6 +36,8 @@
 #'   \item{x2}{randomly generated numeric feature}
 #'   \item{target}{factor array with class labels in 4 levels}
 #' }
+#' 
+#' @family Dataset
 "multi_spirals"
 
 #' Covertype Data
@@ -43,4 +49,6 @@
 #'   \item{V1...V54}{binary features}
 #'   \item{Target}{character array with class labels in 7 categories}
 #' }
+#' 
+#' @family Dataset
 "covertype"

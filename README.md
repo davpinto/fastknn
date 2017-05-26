@@ -3,7 +3,7 @@ Fast k-Nearest Neighbor Classifier
 
 > Fast KNN with shrinkage estimator for the class membership probabilities
 
-[![Travis-CI Build Status](https://travis-ci.org/davpinto/fastknn.svg?branch=master)](https://travis-ci.org/davpinto/fastknn) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/fastknn?color=blue)](https://cran.r-project.org/package=fastknn) [![codecov](https://codecov.io/github/davpinto/fastknn/branch/master/graphs/badge.svg)](https://codecov.io/github/davpinto/fastknn)
+[![Travis-CI Build Status](https://travis-ci.org/davpinto/fastknn.svg?branch=master)](https://travis-ci.org/davpinto/fastknn) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/davpinto/fastknn?branch=master&svg=true)](https://ci.appveyor.com/project/davpinto/fastknn) [![codecov](https://codecov.io/github/davpinto/fastknn/branch/master/graphs/badge.svg)](https://codecov.io/github/davpinto/fastknn) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/fastknn?color=blue)](https://cran.r-project.org/package=fastknn)
 
 ------------------------------------------------------------------------
 

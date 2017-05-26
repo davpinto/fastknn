@@ -1,6 +1,6 @@
 templates:
   params:
-    bootswatch: cosmo
+    bootswatch: simplex
 
 authors:
   David Pinto:

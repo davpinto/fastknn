@@ -16,5 +16,9 @@ multi_spirals
 \description{
 Bidimensional multiclass dataset to be used as a toy example.
 }
+\seealso{
+Other Dataset: \code{\link{chess}},
+  \code{\link{covertype}}, \code{\link{spirals}}
+}
 \keyword{datasets}
 
