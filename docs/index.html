@@ -40,13 +40,12 @@
     
 <div class="contents">
 <blockquote>
-<p>Fast KNN with shrinkage estimator for the class membership probabilities</p>
+<p>Fast k-Nearest Neighbors Classifier with shrinkage estimator for the class membership probabilities</p>
 </blockquote>
-<p><a href="https://travis-ci.org/davpinto/fastknn"><img src="https://travis-ci.org/davpinto/fastknn.svg?branch=master" alt="Travis-CI Build Status"></a> <a href="https://ci.appveyor.com/project/davpinto/fastknn"><img src="https://ci.appveyor.com/api/projects/status/github/davpinto/fastknn?branch=master&amp;svg=true" alt="AppVeyor Build Status"></a> <a href="https://codecov.io/github/davpinto/fastknn"><img src="https://codecov.io/github/davpinto/fastknn/branch/master/graphs/badge.svg" alt="codecov"></a> <a href="https://cran.r-project.org/package=fastknn"><img src="http://www.r-pkg.org/badges/version/fastknn?color=blue" alt="CRAN_Status_Badge"></a></p>
-<hr><p>The <code>fastknn</code> is now available on <a href="https://github.com/Kaggle/docker-rstats">Kaggle</a>. Take a look at this <a href="https://www.kaggle.com/davidpinto/d/uciml/forest-cover-type-dataset/fastknn-show-to-glm-what-knn-see-0-96">kernel</a> to see an example on how to use <code>fastknn</code> to improve your performance on <strong>Kaggle</strong> competitions.</p>
-<hr><div id="why-fastknn" class="section level3">
+<div id="why-fastknn" class="section level3">
 <h3 class="hasAnchor"><a href="#why-fastknn" class="anchor"> </a>Why <code>fastknn</code>?</h3>
-<ol style="list-style-type: decimal"><li>Build KNN classifiers with <strong>large datasets</strong> (&gt; 100k rows) in a few seconds.</li>
+<hr><p>The <code>fastknn</code> is now available on <a href="https://github.com/Kaggle/docker-rstats">Kaggle</a>. Take a look at this <a href="https://www.kaggle.com/davidpinto/d/uciml/forest-cover-type-dataset/fastknn-show-to-glm-what-knn-see-0-96">kernel</a> to see an example on how to use <code>fastknn</code> to improve your performance on <strong>Kaggle</strong> competitions.</p>
+<hr><ol style="list-style-type: decimal"><li>Build KNN classifiers with <strong>large datasets</strong> (&gt; 100k rows) in a few seconds.</li>
 <li>Predict more <strong>calibrated probabilities</strong> and reduce log-loss with the <code>"dist"</code> estimator.</li>
 <li>Find the <strong>best k</strong> parameter according to a variety of loss functions, using n-fold cross validation.</li>
 <li>Plot beautiful classification <strong>decision boundaries</strong> for your dataset.</li>
