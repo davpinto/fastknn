@@ -1,17 +1,15 @@
-Fast k-Nearest Neighbor Classifier
+FastKNN [![Travis-CI Build Status](https://travis-ci.org/davpinto/fastknn.svg?branch=master)](https://travis-ci.org/davpinto/fastknn) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/davpinto/fastknn?branch=master&svg=true)](https://ci.appveyor.com/project/davpinto/fastknn) [![codecov](https://codecov.io/github/davpinto/fastknn/branch/master/graphs/badge.svg)](https://codecov.io/github/davpinto/fastknn) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/fastknn?color=blue)](https://cran.r-project.org/package=fastknn)
 ================
 
-> Fast KNN with shrinkage estimator for the class membership probabilities
+> Fast k-Nearest Neighbors Classifier with shrinkage estimator for the class membership probabilities
 
-[![Travis-CI Build Status](https://travis-ci.org/davpinto/fastknn.svg?branch=master)](https://travis-ci.org/davpinto/fastknn) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/davpinto/fastknn?branch=master&svg=true)](https://ci.appveyor.com/project/davpinto/fastknn) [![codecov](https://codecov.io/github/davpinto/fastknn/branch/master/graphs/badge.svg)](https://codecov.io/github/davpinto/fastknn) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/fastknn?color=blue)](https://cran.r-project.org/package=fastknn)
+### Why `fastknn`?
 
 ------------------------------------------------------------------------
 
 The `fastknn` is now available on [Kaggle](https://github.com/Kaggle/docker-rstats). Take a look at this [kernel](https://www.kaggle.com/davidpinto/d/uciml/forest-cover-type-dataset/fastknn-show-to-glm-what-knn-see-0-96) to see an example on how to use `fastknn` to improve your performance on **Kaggle** competitions.
 
 ------------------------------------------------------------------------
-
-### Why `fastknn`?
 
 1.  Build KNN classifiers with **large datasets** (&gt; 100k rows) in a few seconds.
 2.  Predict more **calibrated probabilities** and reduce log-loss with the `"dist"` estimator.
