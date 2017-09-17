@@ -3,6 +3,8 @@ FastKNN [![Travis-CI Build Status](https://travis-ci.org/davpinto/fastknn.svg?br
 
 > Fast k-Nearest Neighbors Classifier with shrinkage estimator for the class membership probabilities
 
+<img src="fastknn_logo.png" width="156px" style="display: block; margin: auto;" />
+
 ### Why `fastknn`?
 
 ------------------------------------------------------------------------
@@ -432,7 +434,7 @@ y.te   <- spirals$y[-tr.idx]
 knnDecision(x.tr, y.tr, x.te, y.te, k = 15)
 ```
 
-<img src="README_files/figure-markdown_github/unnamed-chunk-7-1.png" style="display: block; margin: auto;" />
+<img src="README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-8-1.png" style="display: block; margin: auto;" />
 
 ### Multi-class Problem
 
@@ -452,7 +454,7 @@ y.te   <- multi_spirals$y[-tr.idx]
 knnDecision(x.tr, y.tr, x.te, y.te, k = 15)
 ```
 
-<img src="README_files/figure-markdown_github/unnamed-chunk-8-1.png" style="display: block; margin: auto;" />
+<img src="README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-9-1.png" style="display: block; margin: auto;" />
 
 Performance Test
 ----------------
@@ -532,37 +534,37 @@ res
 <tr class="odd">
 <td align="center">knn</td>
 <td align="center">10000</td>
-<td align="center">1.212</td>
+<td align="center">1.32</td>
 <td align="center">73.38</td>
 </tr>
 <tr class="even">
 <td align="center">fastknn</td>
 <td align="center">10000</td>
-<td align="center">0.121</td>
+<td align="center">0.086</td>
 <td align="center">77.04</td>
 </tr>
 <tr class="odd">
 <td align="center">knn</td>
 <td align="center">15000</td>
-<td align="center">3.079</td>
+<td align="center">2.942</td>
 <td align="center">73.71</td>
 </tr>
 <tr class="even">
 <td align="center">fastknn</td>
 <td align="center">15000</td>
-<td align="center">0.149</td>
+<td align="center">0.116</td>
 <td align="center">76.82</td>
 </tr>
 <tr class="odd">
 <td align="center">knn</td>
 <td align="center">20000</td>
-<td align="center">6.02</td>
+<td align="center">6.518</td>
 <td align="center">76.38</td>
 </tr>
 <tr class="even">
 <td align="center">fastknn</td>
 <td align="center">20000</td>
-<td align="center">0.177</td>
+<td align="center">0.15</td>
 <td align="center">80.37</td>
 </tr>
 </tbody>
@@ -758,7 +760,7 @@ g2 <- knnDecision(new.data$new.tr, y.tr, new.data$new.te, y.te, k = 10) +
 grid.arrange(g1, g2, ncol = 2)
 ```
 
-<img src="README_files/figure-markdown_github/unnamed-chunk-17-1.png" style="display: block; margin: auto;" />
+<img src="README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-18-1.png" style="display: block; margin: auto;" />
 
 **Mapping the *spirals* dataset**
 
@@ -788,4 +790,4 @@ g2 <- knnDecision(new.data$new.tr, y.tr, new.data$new.te, y.te, k = 10) +
 grid.arrange(g1, g2, ncol = 2)
 ```
 
-<img src="README_files/figure-markdown_github/unnamed-chunk-18-1.png" style="display: block; margin: auto;" />
+<img src="README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-19-1.png" style="display: block; margin: auto;" />

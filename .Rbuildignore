@@ -2,3 +2,14 @@
 ^\.Rproj\.user$
 ^\.travis\.yml$
 ^appveyor\.yml$
+^_pkgdown\.yml$
+^example\.R$
+^README\.Rmd$
+^README\.md$
+^docs$
+^README_cache$
+^README_files$
+^fastknn_logo\.svg$
+^fastknn_logo\.png$
+^Makefile$
+^GPL-2\.txt$
