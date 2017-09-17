@@ -16,10 +16,25 @@
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav"><li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
 </li>
 <li>
-  <a href="../articles/index.html">Articles</a>
+  <a href="../reference/index.html">
+    <span class="fa fa-code"></span>
+     
+    Functions
+  </a>
+</li>
+<li>
+  <a href="../articles/index.html">
+    <span class="fa fa-book"></span>
+     
+    Vignettes
+  </a>
 </li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
   <a href="https://github.com/davpinto/fastknn">
@@ -53,16 +68,16 @@
 
 ## Load data
 <span class="kw">data</span>(<span class="st">"covertype"</span>, <span class="dt">package =</span> <span class="st">"fastknn"</span>)
-x &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(covertype[, -<span class="dv">55</span>])
-y &lt;-<span class="st"> </span><span class="kw">as.factor</span>(covertype$Target)
+x &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(covertype[, <span class="op">-</span><span class="dv">55</span>])
+y &lt;-<span class="st"> </span><span class="kw">as.factor</span>(covertype<span class="op">$</span>Target)
 
 ## Split data for training and test
 <span class="kw">set.seed</span>(<span class="dv">123</span>)
-tr.idx &lt;-<span class="st"> </span><span class="kw">which</span>(caTools::<span class="kw">sample.split</span>(<span class="dt">Y =</span> y, <span class="dt">SplitRatio =</span> <span class="fl">0.7</span>))
+tr.idx &lt;-<span class="st"> </span><span class="kw">which</span>(caTools<span class="op">::</span><span class="kw">sample.split</span>(<span class="dt">Y =</span> y, <span class="dt">SplitRatio =</span> <span class="fl">0.7</span>))
 x.tr   &lt;-<span class="st"> </span>x[tr.idx, ]
-x.te   &lt;-<span class="st"> </span>x[-tr.idx, ]
+x.te   &lt;-<span class="st"> </span>x[<span class="op">-</span>tr.idx, ]
 y.tr   &lt;-<span class="st"> </span>y[tr.idx]
-y.te   &lt;-<span class="st"> </span>y[-tr.idx]
+y.te   &lt;-<span class="st"> </span>y[<span class="op">-</span>tr.idx]
 
 ## Fit KNN
 t1 &lt;-<span class="st"> </span><span class="kw">system.time</span>({
@@ -72,9 +87,9 @@ t1</code></pre></div>
 <table style="width:47%;" class="table"><colgroup><col width="16%"><col width="15%"><col width="15%"></colgroup><thead><tr class="header"><th align="center">user.self</th>
 <th align="center">sys.self</th>
 <th align="center">elapsed</th>
-</tr></thead><tbody><tr class="odd"><td align="center">0.488</td>
+</tr></thead><tbody><tr class="odd"><td align="center">0.516</td>
 <td align="center">0.004</td>
-<td align="center">0.493</td>
+<td align="center">0.519</td>
 </tr></tbody></table><p>Extremely fast!</p>
 </div>
 <div id="pre-processing" class="section level2">
@@ -88,10 +103,10 @@ t1</code></pre></div>
 knn.norm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/fastknn.html">fastknn</a></span>(x.tr, y.tr, x.te, <span class="dt">k =</span> <span class="dv">15</span>, <span class="dt">method =</span> <span class="st">"dist"</span>, <span class="dt">normalize =</span> <span class="st">"minmax"</span>)
 
 ## Performance without normalization
-<span class="kw">sprintf</span>(<span class="st">"Logloss without normalization: %.3f"</span>, <span class="kw"><a href="../reference/classLoss.html">classLoss</a></span>(y.te, <span class="dt">prob =</span> knn.out$prob, <span class="dt">eval.metric =</span> <span class="st">"logloss"</span>))
+<span class="kw">sprintf</span>(<span class="st">"Logloss without normalization: %.3f"</span>, <span class="kw"><a href="../reference/classLoss.html">classLoss</a></span>(y.te, <span class="dt">prob =</span> knn.out<span class="op">$</span>prob, <span class="dt">eval.metric =</span> <span class="st">"logloss"</span>))
 
 ## Performance with nromalization
-<span class="kw">sprintf</span>(<span class="st">"Logloss with normalization: %.3f"</span>, <span class="kw"><a href="../reference/classLoss.html">classLoss</a></span>(y.te, <span class="dt">prob =</span> knn.norm$prob, <span class="dt">eval.metric =</span> <span class="st">"logloss"</span>))</code></pre></div>
+<span class="kw">sprintf</span>(<span class="st">"Logloss with normalization: %.3f"</span>, <span class="kw"><a href="../reference/classLoss.html">classLoss</a></span>(y.te, <span class="dt">prob =</span> knn.norm<span class="op">$</span>prob, <span class="dt">eval.metric =</span> <span class="st">"logloss"</span>))</code></pre></div>
 <pre><code>## [1] "Logloss without normalization: 0.507"</code></pre>
 <pre><code>## [1] "Logloss with normalization: 0.611"</code></pre>
 <p>For this dataset, normalization had a negative effect on classification performance, but in many cases it is important to transform variables to the same unit before fitting KNN.</p>
@@ -104,7 +119,7 @@ knn.norm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/fa
 <li><code>"auc"</code>: average in-class area under the ROC curve</li>
 <li><code>"logloss"</code>: cross-entropy error</li>
 </ol><div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cv.out &lt;-<span class="st"> </span><span class="kw"><a href="../reference/fastknnCV.html">fastknnCV</a></span>(x, y, <span class="dt">k =</span> <span class="kw">c</span>(<span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">15</span>), <span class="dt">method =</span> <span class="st">"dist"</span>, <span class="dt">folds =</span> <span class="dv">5</span>, <span class="dt">eval.metric =</span> <span class="st">"overall_error"</span>)
-cv.out$cv_table</code></pre></div>
+cv.out<span class="op">$</span>cv_table</code></pre></div>
 <table style="width:76%;" class="table"><colgroup><col width="12%"><col width="12%"><col width="12%"><col width="12%"><col width="12%"><col width="9%"><col width="4%"></colgroup><thead><tr class="header"><th align="center">fold_1</th>
 <th align="center">fold_2</th>
 <th align="center">fold_3</th>
@@ -144,11 +159,11 @@ cv.out$cv_table</code></pre></div>
 
 ## Split data for training and test
 <span class="kw">set.seed</span>(<span class="dv">123</span>)
-tr.idx &lt;-<span class="st"> </span><span class="kw">which</span>(caTools::<span class="kw">sample.split</span>(<span class="dt">Y =</span> spirals$y, <span class="dt">SplitRatio =</span> <span class="fl">0.7</span>))
-x.tr   &lt;-<span class="st"> </span>spirals$x[tr.idx, ]
-x.te   &lt;-<span class="st"> </span>spirals$x[-tr.idx, ]
-y.tr   &lt;-<span class="st"> </span>spirals$y[tr.idx]
-y.te   &lt;-<span class="st"> </span>spirals$y[-tr.idx]
+tr.idx &lt;-<span class="st"> </span><span class="kw">which</span>(caTools<span class="op">::</span><span class="kw">sample.split</span>(<span class="dt">Y =</span> spirals<span class="op">$</span>y, <span class="dt">SplitRatio =</span> <span class="fl">0.7</span>))
+x.tr   &lt;-<span class="st"> </span>spirals<span class="op">$</span>x[tr.idx, ]
+x.te   &lt;-<span class="st"> </span>spirals<span class="op">$</span>x[<span class="op">-</span>tr.idx, ]
+y.tr   &lt;-<span class="st"> </span>spirals<span class="op">$</span>y[tr.idx]
+y.te   &lt;-<span class="st"> </span>spirals<span class="op">$</span>y[<span class="op">-</span>tr.idx]
 
 ## Plot decision boudary
 <span class="kw"><a href="../reference/knnDecision.html">knnDecision</a></span>(x.tr, y.tr, x.te, y.te, <span class="dt">k =</span> <span class="dv">10</span>, <span class="dt">method =</span> <span class="st">"dist"</span>)</code></pre></div>
@@ -160,11 +175,11 @@ y.te   &lt;-<span class="st"> </span>spirals$y[-tr.idx]
 
 ## Split data for training and test
 <span class="kw">set.seed</span>(<span class="dv">123</span>)
-tr.idx &lt;-<span class="st"> </span><span class="kw">which</span>(caTools::<span class="kw">sample.split</span>(<span class="dt">Y =</span> multi_spirals$y, <span class="dt">SplitRatio =</span> <span class="fl">0.7</span>))
-x.tr   &lt;-<span class="st"> </span>multi_spirals$x[tr.idx, ]
-x.te   &lt;-<span class="st"> </span>multi_spirals$x[-tr.idx, ]
-y.tr   &lt;-<span class="st"> </span>multi_spirals$y[tr.idx]
-y.te   &lt;-<span class="st"> </span>multi_spirals$y[-tr.idx]
+tr.idx &lt;-<span class="st"> </span><span class="kw">which</span>(caTools<span class="op">::</span><span class="kw">sample.split</span>(<span class="dt">Y =</span> multi_spirals<span class="op">$</span>y, <span class="dt">SplitRatio =</span> <span class="fl">0.7</span>))
+x.tr   &lt;-<span class="st"> </span>multi_spirals<span class="op">$</span>x[tr.idx, ]
+x.te   &lt;-<span class="st"> </span>multi_spirals<span class="op">$</span>x[<span class="op">-</span>tr.idx, ]
+y.tr   &lt;-<span class="st"> </span>multi_spirals<span class="op">$</span>y[tr.idx]
+y.te   &lt;-<span class="st"> </span>multi_spirals<span class="op">$</span>y[<span class="op">-</span>tr.idx]
 
 ## Plot decision boudary
 <span class="kw"><a href="../reference/knnDecision.html">knnDecision</a></span>(x.tr, y.tr, x.te, y.te, <span class="dt">k =</span> <span class="dv">10</span>, <span class="dt">method =</span> <span class="st">"dist"</span>)</code></pre></div>
@@ -180,7 +195,7 @@ y.te   &lt;-<span class="st"> </span>multi_spirals$y[-tr.idx]
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">#### 5-fold cross-validation
 <span class="kw">set.seed</span>(<span class="dv">123</span>)
 res &lt;-<span class="st"> </span><span class="kw"><a href="../reference/fastknnCV.html">fastknnCV</a></span>(x, y, <span class="dt">k =</span> <span class="dv">10</span>, <span class="dt">method =</span> <span class="st">"vote"</span>, <span class="dt">folds =</span> <span class="dv">5</span>, <span class="dt">eval.metric =</span> <span class="st">"logloss"</span>)
-res$cv_table</code></pre></div>
+res<span class="op">$</span>cv_table</code></pre></div>
 <table style="width:76%;" class="table"><colgroup><col width="12%"><col width="12%"><col width="12%"><col width="12%"><col width="12%"><col width="9%"><col width="4%"></colgroup><thead><tr class="header"><th align="center">fold_1</th>
 <th align="center">fold_2</th>
 <th align="center">fold_3</th>
@@ -199,7 +214,7 @@ res$cv_table</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">#### 5-fold cross-validation
 <span class="kw">set.seed</span>(<span class="dv">123</span>)
 res &lt;-<span class="st"> </span><span class="kw"><a href="../reference/fastknnCV.html">fastknnCV</a></span>(x, y, <span class="dt">k =</span> <span class="dv">10</span>, <span class="dt">method =</span> <span class="st">"dist"</span>, <span class="dt">folds =</span> <span class="dv">5</span>, <span class="dt">eval.metric =</span> <span class="st">"logloss"</span>)
-res$cv_table</code></pre></div>
+res<span class="op">$</span>cv_table</code></pre></div>
 <table style="width:76%;" class="table"><colgroup><col width="12%"><col width="12%"><col width="12%"><col width="12%"><col width="12%"><col width="9%"><col width="4%"></colgroup><thead><tr class="header"><th align="center">fold_1</th>
 <th align="center">fold_2</th>
 <th align="center">fold_3</th>

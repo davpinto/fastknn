@@ -16,10 +16,25 @@
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav"><li>
-  <a href="reference/index.html">Reference</a>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
 </li>
 <li>
-  <a href="articles/index.html">Articles</a>
+  <a href="reference/index.html">
+    <span class="fa fa-code"></span>
+     
+    Functions
+  </a>
+</li>
+<li>
+  <a href="articles/index.html">
+    <span class="fa fa-book"></span>
+     
+    Vignettes
+  </a>
 </li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
   <a href="https://github.com/davpinto/fastknn">
@@ -42,6 +57,7 @@
 <blockquote>
 <p>Fast k-Nearest Neighbors Classifier with shrinkage estimator for the class membership probabilities</p>
 </blockquote>
+<p><img src="fastknn_logo.png" width="156px" style="display: block; margin: auto;"></p>
 <div id="why-fastknn" class="section level3">
 <h3 class="hasAnchor"><a href="#why-fastknn" class="anchor"> </a>Why <code>fastknn</code>?</h3>
 <hr><p>The <code>fastknn</code> is now available on <a href="https://github.com/Kaggle/docker-rstats">Kaggle</a>. Take a look at this <a href="https://www.kaggle.com/davidpinto/d/uciml/forest-cover-type-dataset/fastknn-show-to-glm-what-knn-see-0-96">kernel</a> to see an example on how to use <code>fastknn</code> to improve your performance on <strong>Kaggle</strong> competitions.</p>
@@ -93,17 +109,17 @@ P(x_i \in y_j) = \displaystyle\frac{\displaystyle\sum\limits_{k=1}^K \left( \fra
 
 ## Split data for training and test
 <span class="kw">set.seed</span>(<span class="dv">123</span>)
-tr.idx &lt;-<span class="st"> </span><span class="kw">which</span>(caTools::<span class="kw">sample.split</span>(<span class="dt">Y =</span> chess$y, <span class="dt">SplitRatio =</span> <span class="fl">0.7</span>))
-x.tr   &lt;-<span class="st"> </span>chess$x[tr.idx, ]
-x.te   &lt;-<span class="st"> </span>chess$x[-tr.idx, ]
-y.tr   &lt;-<span class="st"> </span>chess$y[tr.idx]
-y.te   &lt;-<span class="st"> </span>chess$y[-tr.idx]
+tr.idx &lt;-<span class="st"> </span><span class="kw">which</span>(caTools<span class="op">::</span><span class="kw">sample.split</span>(<span class="dt">Y =</span> chess<span class="op">$</span>y, <span class="dt">SplitRatio =</span> <span class="fl">0.7</span>))
+x.tr   &lt;-<span class="st"> </span>chess<span class="op">$</span>x[tr.idx, ]
+x.te   &lt;-<span class="st"> </span>chess<span class="op">$</span>x[<span class="op">-</span>tr.idx, ]
+y.tr   &lt;-<span class="st"> </span>chess<span class="op">$</span>y[tr.idx]
+y.te   &lt;-<span class="st"> </span>chess<span class="op">$</span>y[<span class="op">-</span>tr.idx]
 
 ## Fit KNN
 yhat &lt;-<span class="st"> </span><span class="kw"><a href="reference/fastknn.html">fastknn</a></span>(x.tr, y.tr, x.te, <span class="dt">k =</span> <span class="dv">10</span>)
 
 ## Evaluate model on test set
-<span class="kw">sprintf</span>(<span class="st">"Accuracy: %.2f"</span>, <span class="dv">100</span> *<span class="st"> </span>(<span class="dv">1</span> -<span class="st"> </span><span class="kw"><a href="reference/classLoss.html">classLoss</a></span>(<span class="dt">actual =</span> y.te, <span class="dt">predicted =</span> yhat$class)))</code></pre></div>
+<span class="kw">sprintf</span>(<span class="st">"Accuracy: %.2f"</span>, <span class="dv">100</span> <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw"><a href="reference/classLoss.html">classLoss</a></span>(<span class="dt">actual =</span> y.te, <span class="dt">predicted =</span> yhat<span class="op">$</span>class)))</code></pre></div>
 <pre><code>## [1] "Accuracy: 97.67"</code></pre>
 </div>
 </div>
@@ -118,13 +134,13 @@ yhat &lt;-<span class="st"> </span><span class="kw"><a href="reference/fastknn.h
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Load dataset
 <span class="kw">library</span>(<span class="st">"mlbench"</span>)
 <span class="kw">data</span>(<span class="st">"Sonar"</span>, <span class="dt">package =</span> <span class="st">"mlbench"</span>)
-x &lt;-<span class="st"> </span><span class="kw">data.matrix</span>(Sonar[, -<span class="dv">61</span>])
-y &lt;-<span class="st"> </span>Sonar$Class
+x &lt;-<span class="st"> </span><span class="kw">data.matrix</span>(Sonar[, <span class="op">-</span><span class="dv">61</span>])
+y &lt;-<span class="st"> </span>Sonar<span class="op">$</span>Class
 
 ## 5-fold CV using log-loss as evaluation metric
 <span class="kw">set.seed</span>(<span class="dv">123</span>)
-cv.out &lt;-<span class="st"> </span><span class="kw"><a href="reference/fastknnCV.html">fastknnCV</a></span>(x, y, <span class="dt">k =</span> <span class="dv">3</span>:<span class="dv">15</span>, <span class="dt">method =</span> <span class="st">"vote"</span>, <span class="dt">folds =</span> <span class="dv">5</span>, <span class="dt">eval.metric =</span> <span class="st">"logloss"</span>)
-cv.out$cv_table</code></pre></div>
+cv.out &lt;-<span class="st"> </span><span class="kw"><a href="reference/fastknnCV.html">fastknnCV</a></span>(x, y, <span class="dt">k =</span> <span class="dv">3</span><span class="op">:</span><span class="dv">15</span>, <span class="dt">method =</span> <span class="st">"vote"</span>, <span class="dt">folds =</span> <span class="dv">5</span>, <span class="dt">eval.metric =</span> <span class="st">"logloss"</span>)
+cv.out<span class="op">$</span>cv_table</code></pre></div>
 <table style="width:76%;" class="table"><colgroup><col width="12%"><col width="12%"><col width="12%"><col width="12%"><col width="12%"><col width="9%"><col width="4%"></colgroup><thead><tr class="header"><th align="center">fold_1</th>
 <th align="center">fold_2</th>
 <th align="center">fold_3</th>
@@ -226,8 +242,8 @@ cv.out$cv_table</code></pre></div>
 </tr></tbody></table><p>Cross-validation using the <strong>weighted voting</strong> probability estimator:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## 5-fold CV using log-loss as evaluation metric
 <span class="kw">set.seed</span>(<span class="dv">123</span>)
-cv.out &lt;-<span class="st"> </span><span class="kw"><a href="reference/fastknnCV.html">fastknnCV</a></span>(x, y, <span class="dt">k =</span> <span class="dv">3</span>:<span class="dv">15</span>, <span class="dt">method =</span> <span class="st">"dist"</span>, <span class="dt">folds =</span> <span class="dv">5</span>, <span class="dt">eval.metric =</span> <span class="st">"logloss"</span>)
-cv.out$cv_table</code></pre></div>
+cv.out &lt;-<span class="st"> </span><span class="kw"><a href="reference/fastknnCV.html">fastknnCV</a></span>(x, y, <span class="dt">k =</span> <span class="dv">3</span><span class="op">:</span><span class="dv">15</span>, <span class="dt">method =</span> <span class="st">"dist"</span>, <span class="dt">folds =</span> <span class="dv">5</span>, <span class="dt">eval.metric =</span> <span class="st">"logloss"</span>)
+cv.out<span class="op">$</span>cv_table</code></pre></div>
 <table style="width:76%;" class="table"><colgroup><col width="12%"><col width="12%"><col width="12%"><col width="12%"><col width="12%"><col width="9%"><col width="4%"></colgroup><thead><tr class="header"><th align="center">fold_1</th>
 <th align="center">fold_2</th>
 <th align="center">fold_3</th>
@@ -339,15 +355,15 @@ cv.out$cv_table</code></pre></div>
 
 ## Split data for training and test
 <span class="kw">set.seed</span>(<span class="dv">123</span>)
-tr.idx &lt;-<span class="st"> </span><span class="kw">which</span>(caTools::<span class="kw">sample.split</span>(<span class="dt">Y =</span> spirals$y, <span class="dt">SplitRatio =</span> <span class="fl">0.7</span>))
-x.tr   &lt;-<span class="st"> </span>spirals$x[tr.idx, ]
-x.te   &lt;-<span class="st"> </span>spirals$x[-tr.idx, ]
-y.tr   &lt;-<span class="st"> </span>spirals$y[tr.idx]
-y.te   &lt;-<span class="st"> </span>spirals$y[-tr.idx]
+tr.idx &lt;-<span class="st"> </span><span class="kw">which</span>(caTools<span class="op">::</span><span class="kw">sample.split</span>(<span class="dt">Y =</span> spirals<span class="op">$</span>y, <span class="dt">SplitRatio =</span> <span class="fl">0.7</span>))
+x.tr   &lt;-<span class="st"> </span>spirals<span class="op">$</span>x[tr.idx, ]
+x.te   &lt;-<span class="st"> </span>spirals<span class="op">$</span>x[<span class="op">-</span>tr.idx, ]
+y.tr   &lt;-<span class="st"> </span>spirals<span class="op">$</span>y[tr.idx]
+y.te   &lt;-<span class="st"> </span>spirals<span class="op">$</span>y[<span class="op">-</span>tr.idx]
 
 ## Plot decision boundary
 <span class="kw"><a href="reference/knnDecision.html">knnDecision</a></span>(x.tr, y.tr, x.te, y.te, <span class="dt">k =</span> <span class="dv">15</span>)</code></pre></div>
-<p><img src="index_files/figure-html/unnamed-chunk-7-1.png" width="840" style="display: block; margin: auto;"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-8-1.png" width="840" style="display: block; margin: auto;"></p>
 </div>
 <div id="multi-class-problem" class="section level3">
 <h3 class="hasAnchor"><a href="#multi-class-problem" class="anchor"> </a>Multi-class Problem</h3>
@@ -356,15 +372,15 @@ y.te   &lt;-<span class="st"> </span>spirals$y[-tr.idx]
 
 ## Split data for training and test
 <span class="kw">set.seed</span>(<span class="dv">123</span>)
-tr.idx &lt;-<span class="st"> </span><span class="kw">which</span>(caTools::<span class="kw">sample.split</span>(<span class="dt">Y =</span> multi_spirals$y, <span class="dt">SplitRatio =</span> <span class="fl">0.7</span>))
-x.tr   &lt;-<span class="st"> </span>multi_spirals$x[tr.idx, ]
-x.te   &lt;-<span class="st"> </span>multi_spirals$x[-tr.idx, ]
-y.tr   &lt;-<span class="st"> </span>multi_spirals$y[tr.idx]
-y.te   &lt;-<span class="st"> </span>multi_spirals$y[-tr.idx]
+tr.idx &lt;-<span class="st"> </span><span class="kw">which</span>(caTools<span class="op">::</span><span class="kw">sample.split</span>(<span class="dt">Y =</span> multi_spirals<span class="op">$</span>y, <span class="dt">SplitRatio =</span> <span class="fl">0.7</span>))
+x.tr   &lt;-<span class="st"> </span>multi_spirals<span class="op">$</span>x[tr.idx, ]
+x.te   &lt;-<span class="st"> </span>multi_spirals<span class="op">$</span>x[<span class="op">-</span>tr.idx, ]
+y.tr   &lt;-<span class="st"> </span>multi_spirals<span class="op">$</span>y[tr.idx]
+y.te   &lt;-<span class="st"> </span>multi_spirals<span class="op">$</span>y[<span class="op">-</span>tr.idx]
 
 ## Plot decision boundary
 <span class="kw"><a href="reference/knnDecision.html">knnDecision</a></span>(x.tr, y.tr, x.te, y.te, <span class="dt">k =</span> <span class="dv">15</span>)</code></pre></div>
-<p><img src="index_files/figure-html/unnamed-chunk-8-1.png" width="840" style="display: block; margin: auto;"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-9-1.png" width="840" style="display: block; margin: auto;"></p>
 </div>
 </div>
 <div id="performance-test" class="section level2">
@@ -381,25 +397,25 @@ y.te   &lt;-<span class="st"> </span>multi_spirals$y[-tr.idx]
 
 #### Load data
 <span class="kw">data</span>(<span class="st">"covertype"</span>, <span class="dt">package =</span> <span class="st">"fastknn"</span>)
-covertype$Target &lt;-<span class="st"> </span><span class="kw">as.factor</span>(covertype$Target)
+covertype<span class="op">$</span>Target &lt;-<span class="st"> </span><span class="kw">as.factor</span>(covertype<span class="op">$</span>Target)
 
 #### Test with different sample sizes
 N &lt;-<span class="st"> </span><span class="kw">nrow</span>(covertype)
-sample.frac &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">10e3</span>, <span class="fl">15e3</span>, <span class="fl">20e3</span>)/N
-res &lt;-<span class="st"> </span><span class="kw">lapply</span>(sample.frac, function(frac, dt) {
+sample.frac &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">10e3</span>, <span class="fl">15e3</span>, <span class="fl">20e3</span>)<span class="op">/</span>N
+res &lt;-<span class="st"> </span><span class="kw">lapply</span>(sample.frac, <span class="cf">function</span>(frac, dt) {
    ## Reduce datset
    <span class="kw">set.seed</span>(<span class="dv">123</span>)
-   sample.idx &lt;-<span class="st"> </span><span class="kw">which</span>(<span class="kw">sample.split</span>(dt$Target, <span class="dt">SplitRatio =</span> frac))
-   x &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(dt[sample.idx, -<span class="dv">55</span>])
-   y &lt;-<span class="st"> </span>dt$Target[sample.idx]
+   sample.idx &lt;-<span class="st"> </span><span class="kw">which</span>(<span class="kw">sample.split</span>(dt<span class="op">$</span>Target, <span class="dt">SplitRatio =</span> frac))
+   x &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(dt[sample.idx, <span class="op">-</span><span class="dv">55</span>])
+   y &lt;-<span class="st"> </span>dt<span class="op">$</span>Target[sample.idx]
    
    ## Split data
    <span class="kw">set.seed</span>(<span class="dv">123</span>)
    tr.idx &lt;-<span class="st"> </span><span class="kw">which</span>(<span class="kw">sample.split</span>(y, <span class="dt">SplitRatio =</span> <span class="fl">0.7</span>))
    x.tr   &lt;-<span class="st"> </span>x[tr.idx, ]
-   x.te   &lt;-<span class="st"> </span>x[-tr.idx, ]
+   x.te   &lt;-<span class="st"> </span>x[<span class="op">-</span>tr.idx, ]
    y.tr   &lt;-<span class="st"> </span>y[tr.idx]
-   y.te   &lt;-<span class="st"> </span>y[-tr.idx]
+   y.te   &lt;-<span class="st"> </span>y[<span class="op">-</span>tr.idx]
    
    ## Measure time
    t1 &lt;-<span class="st"> </span><span class="kw">system.time</span>({
@@ -412,9 +428,9 @@ res &lt;-<span class="st"> </span><span class="kw">lapply</span>(sample.frac, fu
    ## Return
    <span class="kw">list</span>(
       <span class="dt">method =</span> <span class="kw">c</span>(<span class="st">'knn'</span>, <span class="st">'fastknn'</span>),
-      <span class="dt">nobs =</span> <span class="kw">as.integer</span>(<span class="kw">rep</span>(N*frac, <span class="dv">2</span>)),
+      <span class="dt">nobs =</span> <span class="kw">as.integer</span>(<span class="kw">rep</span>(N<span class="op">*</span>frac, <span class="dv">2</span>)),
       <span class="dt">time_sec =</span> <span class="kw">c</span>(t1[<span class="dv">3</span>], t2[<span class="dv">3</span>]), 
-      <span class="dt">accuracy =</span> <span class="kw">round</span>(<span class="dv">100</span> *<span class="st"> </span><span class="kw">c</span>(<span class="kw">sum</span>(yhat1 ==<span class="st"> </span>y.te), <span class="kw">sum</span>(yhat2$class ==<span class="st"> </span>y.te)) /<span class="st"> </span><span class="kw">length</span>(y.te), <span class="dv">2</span>)
+      <span class="dt">accuracy =</span> <span class="kw">round</span>(<span class="dv">100</span> <span class="op">*</span><span class="st"> </span><span class="kw">c</span>(<span class="kw">sum</span>(yhat1 <span class="op">==</span><span class="st"> </span>y.te), <span class="kw">sum</span>(yhat2<span class="op">$</span>class <span class="op">==</span><span class="st"> </span>y.te)) <span class="op">/</span><span class="st"> </span><span class="kw">length</span>(y.te), <span class="dv">2</span>)
    )
 }, <span class="dt">dt =</span> covertype)
 res &lt;-<span class="st"> </span><span class="kw">do.call</span>(<span class="st">'rbind.data.frame'</span>, res)
@@ -425,27 +441,27 @@ res</code></pre></div>
 <th align="center">accuracy</th>
 </tr></thead><tbody><tr class="odd"><td align="center">knn</td>
 <td align="center">10000</td>
-<td align="center">1.291</td>
+<td align="center">1.172</td>
 <td align="center">73.38</td>
 </tr><tr class="even"><td align="center">fastknn</td>
 <td align="center">10000</td>
-<td align="center">0.152</td>
+<td align="center">0.149</td>
 <td align="center">77.04</td>
 </tr><tr class="odd"><td align="center">knn</td>
 <td align="center">15000</td>
-<td align="center">3.018</td>
+<td align="center">2.676</td>
 <td align="center">73.71</td>
 </tr><tr class="even"><td align="center">fastknn</td>
 <td align="center">15000</td>
-<td align="center">0.18</td>
+<td align="center">0.181</td>
 <td align="center">76.82</td>
 </tr><tr class="odd"><td align="center">knn</td>
 <td align="center">20000</td>
-<td align="center">6.381</td>
+<td align="center">6.481</td>
 <td align="center">76.38</td>
 </tr><tr class="even"><td align="center">fastknn</td>
 <td align="center">20000</td>
-<td align="center">0.205</td>
+<td align="center">0.211</td>
 <td align="center">80.37</td>
 </tr></tbody></table><p>The <code>fastknn</code> takes <strong>about 5s</strong> to fit the entire dataset.</p>
 </div>
@@ -454,13 +470,13 @@ res</code></pre></div>
 <p>We compared the <code>voting</code> estimator with the <code>weighted voting</code> estimator:</p>
 <p><strong>Voting</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">#### Extract input variables and response variable
-x &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(covertype[, -<span class="dv">55</span>])
-y &lt;-<span class="st"> </span><span class="kw">as.factor</span>(covertype$Target)
+x &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(covertype[, <span class="op">-</span><span class="dv">55</span>])
+y &lt;-<span class="st"> </span><span class="kw">as.factor</span>(covertype<span class="op">$</span>Target)
 
 #### 5-fold cross-validation
 <span class="kw">set.seed</span>(<span class="dv">123</span>)
 res &lt;-<span class="st"> </span><span class="kw"><a href="reference/fastknnCV.html">fastknnCV</a></span>(x, y, <span class="dt">k =</span> <span class="dv">10</span>, <span class="dt">method =</span> <span class="st">"vote"</span>, <span class="dt">folds =</span> <span class="dv">5</span>, <span class="dt">eval.metric =</span> <span class="st">"logloss"</span>)
-res$cv_table</code></pre></div>
+res<span class="op">$</span>cv_table</code></pre></div>
 <table style="width:76%;" class="table"><colgroup><col width="12%"><col width="12%"><col width="12%"><col width="12%"><col width="12%"><col width="9%"><col width="4%"></colgroup><thead><tr class="header"><th align="center">fold_1</th>
 <th align="center">fold_2</th>
 <th align="center">fold_3</th>
@@ -479,7 +495,7 @@ res$cv_table</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">#### 5-fold cross-validation
 <span class="kw">set.seed</span>(<span class="dv">123</span>)
 res &lt;-<span class="st"> </span><span class="kw"><a href="reference/fastknnCV.html">fastknnCV</a></span>(x, y, <span class="dt">k =</span> <span class="dv">10</span>, <span class="dt">method =</span> <span class="st">"dist"</span>, <span class="dt">folds =</span> <span class="dv">5</span>, <span class="dt">eval.metric =</span> <span class="st">"logloss"</span>)
-res$cv_table</code></pre></div>
+res<span class="op">$</span>cv_table</code></pre></div>
 <table style="width:76%;" class="table"><colgroup><col width="12%"><col width="12%"><col width="12%"><col width="12%"><col width="12%"><col width="9%"><col width="4%"></colgroup><thead><tr class="header"><th align="center">fold_1</th>
 <th align="center">fold_2</th>
 <th align="center">fold_3</th>
@@ -506,19 +522,19 @@ res$cv_table</code></pre></div>
 
 #### Load data
 <span class="kw">data</span>(<span class="st">"Ionosphere"</span>, <span class="dt">package =</span> <span class="st">"mlbench"</span>)
-x &lt;-<span class="st"> </span><span class="kw">data.matrix</span>(<span class="kw">subset</span>(Ionosphere, <span class="dt">select =</span> -Class))
-y &lt;-<span class="st"> </span>Ionosphere$Class
+x &lt;-<span class="st"> </span><span class="kw">data.matrix</span>(<span class="kw">subset</span>(Ionosphere, <span class="dt">select =</span> <span class="op">-</span>Class))
+y &lt;-<span class="st"> </span>Ionosphere<span class="op">$</span>Class
 
 #### Remove near zero variance columns
-x &lt;-<span class="st"> </span>x[, -<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)]
+x &lt;-<span class="st"> </span>x[, <span class="op">-</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)]
 
 #### Split data
 <span class="kw">set.seed</span>(<span class="dv">123</span>)
 tr.idx &lt;-<span class="st"> </span><span class="kw">which</span>(<span class="kw">sample.split</span>(<span class="dt">Y =</span> y, <span class="dt">SplitRatio =</span> <span class="fl">0.7</span>))
 x.tr &lt;-<span class="st"> </span>x[tr.idx,]
-x.te &lt;-<span class="st"> </span>x[-tr.idx,]
+x.te &lt;-<span class="st"> </span>x[<span class="op">-</span>tr.idx,]
 y.tr &lt;-<span class="st"> </span>y[tr.idx]
-y.te &lt;-<span class="st"> </span>y[-tr.idx]
+y.te &lt;-<span class="st"> </span>y[<span class="op">-</span>tr.idx]
 
 #### GLM with original features
 glm &lt;-<span class="st"> </span><span class="kw">glmnet</span>(<span class="dt">x =</span> x.tr, <span class="dt">y =</span> y.tr, <span class="dt">family =</span> <span class="st">"binomial"</span>, <span class="dt">lambda =</span> <span class="dv">0</span>)
@@ -530,13 +546,13 @@ yhat1 &lt;-<span class="st"> </span><span class="kw">factor</span>(yhat, <span c
 new.data &lt;-<span class="st"> </span><span class="kw"><a href="reference/knnExtract.html">knnExtract</a></span>(<span class="dt">xtr =</span> x.tr, <span class="dt">ytr =</span> y.tr, <span class="dt">xte =</span> x.te, <span class="dt">k =</span> <span class="dv">3</span>)
 
 #### GLM with KNN features
-glm &lt;-<span class="st"> </span><span class="kw">glmnet</span>(<span class="dt">x =</span> new.data$new.tr, <span class="dt">y =</span> y.tr, <span class="dt">family =</span> <span class="st">"binomial"</span>, <span class="dt">lambda =</span> <span class="dv">0</span>)
-yhat &lt;-<span class="st"> </span><span class="kw">drop</span>(<span class="kw">predict</span>(glm, new.data$new.te, <span class="dt">type =</span> <span class="st">"class"</span>))
+glm &lt;-<span class="st"> </span><span class="kw">glmnet</span>(<span class="dt">x =</span> new.data<span class="op">$</span>new.tr, <span class="dt">y =</span> y.tr, <span class="dt">family =</span> <span class="st">"binomial"</span>, <span class="dt">lambda =</span> <span class="dv">0</span>)
+yhat &lt;-<span class="st"> </span><span class="kw">drop</span>(<span class="kw">predict</span>(glm, new.data<span class="op">$</span>new.te, <span class="dt">type =</span> <span class="st">"class"</span>))
 yhat2 &lt;-<span class="st"> </span><span class="kw">factor</span>(yhat, <span class="dt">levels =</span> <span class="kw">levels</span>(y.tr))
 
 #### Performance
-<span class="kw">sprintf</span>(<span class="st">"Accuracy: %.2f"</span>, <span class="dv">100</span> *<span class="st"> </span>(<span class="dv">1</span> -<span class="st"> </span><span class="kw"><a href="reference/classLoss.html">classLoss</a></span>(<span class="dt">actual =</span> y.te, <span class="dt">predicted =</span> yhat1)))
-<span class="kw">sprintf</span>(<span class="st">"Accuracy: %.2f"</span>, <span class="dv">100</span> *<span class="st"> </span>(<span class="dv">1</span> -<span class="st"> </span><span class="kw"><a href="reference/classLoss.html">classLoss</a></span>(<span class="dt">actual =</span> y.te, <span class="dt">predicted =</span> yhat2)))</code></pre></div>
+<span class="kw">sprintf</span>(<span class="st">"Accuracy: %.2f"</span>, <span class="dv">100</span> <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw"><a href="reference/classLoss.html">classLoss</a></span>(<span class="dt">actual =</span> y.te, <span class="dt">predicted =</span> yhat1)))
+<span class="kw">sprintf</span>(<span class="st">"Accuracy: %.2f"</span>, <span class="dv">100</span> <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw"><a href="reference/classLoss.html">classLoss</a></span>(<span class="dt">actual =</span> y.te, <span class="dt">predicted =</span> yhat2)))</code></pre></div>
 <pre><code>## [1] "Accuracy: 83.81"</code></pre>
 <pre><code>## [1] "Accuracy: 95.24"</code></pre>
 <p>We can see that the <strong>KNN features</strong> improved a lot the classification performance of the GLM model.</p>
@@ -553,53 +569,53 @@ yhat2 &lt;-<span class="st"> </span><span class="kw">factor</span>(yhat, <span c
 
 ## Load data
 <span class="kw">data</span>(<span class="st">"chess"</span>)
-x &lt;-<span class="st"> </span><span class="kw">data.matrix</span>(chess$x)
-y &lt;-<span class="st"> </span>chess$y
+x &lt;-<span class="st"> </span><span class="kw">data.matrix</span>(chess<span class="op">$</span>x)
+y &lt;-<span class="st"> </span>chess<span class="op">$</span>y
 
 ## Split data
 <span class="kw">set.seed</span>(<span class="dv">123</span>)
 tr.idx &lt;-<span class="st"> </span><span class="kw">which</span>(<span class="kw">sample.split</span>(<span class="dt">Y =</span> y, <span class="dt">SplitRatio =</span> <span class="fl">0.7</span>))
 x.tr &lt;-<span class="st"> </span>x[tr.idx,]
-x.te &lt;-<span class="st"> </span>x[-tr.idx,]
+x.te &lt;-<span class="st"> </span>x[<span class="op">-</span>tr.idx,]
 y.tr &lt;-<span class="st"> </span>y[tr.idx]
-y.te &lt;-<span class="st"> </span>y[-tr.idx]
+y.te &lt;-<span class="st"> </span>y[<span class="op">-</span>tr.idx]
 
 ## Feature extraction with KNN
 <span class="kw">set.seed</span>(<span class="dv">123</span>)
 new.data &lt;-<span class="st"> </span><span class="kw"><a href="reference/knnExtract.html">knnExtract</a></span>(x.tr, y.tr, x.te, <span class="dt">k =</span> <span class="dv">1</span>)
 
 ## Decision boundaries
-g1 &lt;-<span class="st"> </span><span class="kw"><a href="reference/knnDecision.html">knnDecision</a></span>(x.tr, y.tr, x.te, y.te, <span class="dt">k =</span> <span class="dv">10</span>) +
+g1 &lt;-<span class="st"> </span><span class="kw"><a href="reference/knnDecision.html">knnDecision</a></span>(x.tr, y.tr, x.te, y.te, <span class="dt">k =</span> <span class="dv">10</span>) <span class="op">+</span>
 <span class="st">   </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">"Original Features"</span>)
-g2 &lt;-<span class="st"> </span><span class="kw"><a href="reference/knnDecision.html">knnDecision</a></span>(new.data$new.tr, y.tr, new.data$new.te, y.te, <span class="dt">k =</span> <span class="dv">10</span>) +
-<span class="st">   </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">"KNN Features"</span>)
-<span class="kw">grid.arrange</span>(g1, g2, <span class="dt">ncol =</span> <span class="dv">2</span>)</code></pre></div>
-<p><img src="index_files/figure-html/unnamed-chunk-17-1.png" width="840" style="display: block; margin: auto;"></p>
-<p><strong>Mapping the <em>spirals</em> dataset</strong></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Load data
-<span class="kw">data</span>(<span class="st">"spirals"</span>)
-x &lt;-<span class="st"> </span><span class="kw">data.matrix</span>(spirals$x)
-y &lt;-<span class="st"> </span>spirals$y
-
-## Split data
-<span class="kw">set.seed</span>(<span class="dv">123</span>)
-tr.idx &lt;-<span class="st"> </span><span class="kw">which</span>(<span class="kw">sample.split</span>(<span class="dt">Y =</span> y, <span class="dt">SplitRatio =</span> <span class="fl">0.7</span>))
-x.tr &lt;-<span class="st"> </span>x[tr.idx,]
-x.te &lt;-<span class="st"> </span>x[-tr.idx,]
-y.tr &lt;-<span class="st"> </span>y[tr.idx]
-y.te &lt;-<span class="st"> </span>y[-tr.idx]
-
-## Feature extraction with KNN
-<span class="kw">set.seed</span>(<span class="dv">123</span>)
-new.data &lt;-<span class="st"> </span><span class="kw"><a href="reference/knnExtract.html">knnExtract</a></span>(x.tr, y.tr, x.te, <span class="dt">k =</span> <span class="dv">1</span>)
-
-## Decision boundaries
-g1 &lt;-<span class="st"> </span><span class="kw"><a href="reference/knnDecision.html">knnDecision</a></span>(x.tr, y.tr, x.te, y.te, <span class="dt">k =</span> <span class="dv">10</span>) +
-<span class="st">   </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">"Original Features"</span>)
-g2 &lt;-<span class="st"> </span><span class="kw"><a href="reference/knnDecision.html">knnDecision</a></span>(new.data$new.tr, y.tr, new.data$new.te, y.te, <span class="dt">k =</span> <span class="dv">10</span>) +
+g2 &lt;-<span class="st"> </span><span class="kw"><a href="reference/knnDecision.html">knnDecision</a></span>(new.data<span class="op">$</span>new.tr, y.tr, new.data<span class="op">$</span>new.te, y.te, <span class="dt">k =</span> <span class="dv">10</span>) <span class="op">+</span>
 <span class="st">   </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">"KNN Features"</span>)
 <span class="kw">grid.arrange</span>(g1, g2, <span class="dt">ncol =</span> <span class="dv">2</span>)</code></pre></div>
 <p><img src="index_files/figure-html/unnamed-chunk-18-1.png" width="840" style="display: block; margin: auto;"></p>
+<p><strong>Mapping the <em>spirals</em> dataset</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Load data
+<span class="kw">data</span>(<span class="st">"spirals"</span>)
+x &lt;-<span class="st"> </span><span class="kw">data.matrix</span>(spirals<span class="op">$</span>x)
+y &lt;-<span class="st"> </span>spirals<span class="op">$</span>y
+
+## Split data
+<span class="kw">set.seed</span>(<span class="dv">123</span>)
+tr.idx &lt;-<span class="st"> </span><span class="kw">which</span>(<span class="kw">sample.split</span>(<span class="dt">Y =</span> y, <span class="dt">SplitRatio =</span> <span class="fl">0.7</span>))
+x.tr &lt;-<span class="st"> </span>x[tr.idx,]
+x.te &lt;-<span class="st"> </span>x[<span class="op">-</span>tr.idx,]
+y.tr &lt;-<span class="st"> </span>y[tr.idx]
+y.te &lt;-<span class="st"> </span>y[<span class="op">-</span>tr.idx]
+
+## Feature extraction with KNN
+<span class="kw">set.seed</span>(<span class="dv">123</span>)
+new.data &lt;-<span class="st"> </span><span class="kw"><a href="reference/knnExtract.html">knnExtract</a></span>(x.tr, y.tr, x.te, <span class="dt">k =</span> <span class="dv">1</span>)
+
+## Decision boundaries
+g1 &lt;-<span class="st"> </span><span class="kw"><a href="reference/knnDecision.html">knnDecision</a></span>(x.tr, y.tr, x.te, y.te, <span class="dt">k =</span> <span class="dv">10</span>) <span class="op">+</span>
+<span class="st">   </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">"Original Features"</span>)
+g2 &lt;-<span class="st"> </span><span class="kw"><a href="reference/knnDecision.html">knnDecision</a></span>(new.data<span class="op">$</span>new.tr, y.tr, new.data<span class="op">$</span>new.te, y.te, <span class="dt">k =</span> <span class="dv">10</span>) <span class="op">+</span>
+<span class="st">   </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">"KNN Features"</span>)
+<span class="kw">grid.arrange</span>(g1, g2, <span class="dt">ncol =</span> <span class="dv">2</span>)</code></pre></div>
+<p><img src="index_files/figure-html/unnamed-chunk-19-1.png" width="840" style="display: block; margin: auto;"></p>
 </div>
 </div>
 </div>

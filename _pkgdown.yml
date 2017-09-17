@@ -1,7 +1,18 @@
 templates:
   params:
     bootswatch: simplex
-
+navbar:
+  title: "fastknn"
+  left:
+    - text: "Home"
+      icon: fa-home
+      href: index.html
+    - text: "Functions"
+      icon: fa-code
+      href: reference/index.html
+    - text: "Vignettes"
+      icon: fa-book
+      href: articles/index.html
 authors:
   David Pinto:
     href: https://davpinto.github.io
